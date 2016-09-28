@@ -25,6 +25,9 @@
 # 主要使用的开源库
 Retrofit2、ButterKnife、Glide、Systembartint、TigerDB、Material Design相关控件
 
+# 安装Demo
+[点击下载](apk/TigerVideo-debug.apk)
+
 # TODO
 后期会加入RxJava、同时会考虑将项目结构重构成MVP模式
 
