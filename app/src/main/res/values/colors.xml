@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- 100% white -->
+    <color name="common_white_color_alpha_100">#FFFFFFFF</color>
+    <!-- 70% black -->
+    <color name="common_black_color_alpha_70">#B2000000</color>
+    <!-- 54% black -->
+    <color name="common_black_coror_alpha_54">#8a000000</color>
+
+    <color name="video_player_seekbar_icon_bg_color">@color/common_white_color_alpha_100</color>
+    <color name="video_player_seekbar_bg_color">#ff666666</color>
+    <color name="video_player_seekbar_progress_color">#ffe72c00</color>
+    <color name="video_player_seekbar_secondaryProgress_color">#ffb4b4b4</color>
+    <color name="video_player_time_txt_color">@color/common_white_color_alpha_100</color>
+    <color name="video_player_change_progress_txt_color">#c72c00</color>
+
+    <color name="about_bg_color">#EEEEEE</color>
+    <color name="about_txt_color">#2C2C2C</color>
+
+</resources>

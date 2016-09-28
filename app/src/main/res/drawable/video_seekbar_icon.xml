@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- 设置圆角效果 -->
+    <corners
+        android:radius="5dp"/>
+
+    <!-- 大小 -->
+    <size
+        android:width="10dp"
+        android:height="10dp"/>
+
+    <!-- 背景填充色 -->
+    <solid
+        android:color="@android:color/white"/>
+
+</shape>

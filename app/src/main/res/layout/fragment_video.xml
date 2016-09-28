@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/video_swipe_refresh_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.ittiger.video.ui.recycler.CommonRecyclerView
+            android:id="@+id/video_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </cn.ittiger.video.ui.recycler.CommonRecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/small_video_player_container"
+            android:layout_width="@dimen/d_160"
+            android:layout_height="@dimen/d_90"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/video_shade_bg"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_video_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="@dimen/d_3"
+                android:src="@drawable/ic_video_close"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>
