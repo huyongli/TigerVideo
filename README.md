@@ -19,7 +19,7 @@
 <img src="screenshots/2.jpg" width = "360" height = "640" alt=""/>
 <img src="screenshots/3.jpg" width = "360" height = "640" alt=""/>
 <img src="screenshots/4.jpg" width = "360" height = "640" alt=""/>
-<img src="screenshots/5.jpg" width = "360" height = "640" alt=""/>
+<img src="screenshots/5.jpg" width = "640" height = "360" alt=""/>
 <img src="screenshots/6.jpg" width = "360" height = "640" alt=""/>
 
 # 主要使用的开源库
@@ -34,3 +34,19 @@ Retrofit2、ButterKnife、Glide、Systembartint、TigerDB、Material Design相�
 # 关于作者
 Email：huyongl1989@163.com
 博客：[http://ittiger.cn](http://ittiger.cn)
+
+# LICENSE
+
+Copyright 2016 huyongli(老胡)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
