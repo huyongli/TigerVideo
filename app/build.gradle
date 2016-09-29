@@ -44,4 +44,9 @@ dependencies {
 
     //透明状态栏
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+    //rxjava
+    compile 'io.reactivex:rxjava:1.0.1'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
 }
