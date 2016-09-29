@@ -26,7 +26,7 @@
 Retrofit2、ButterKnife、Glide、Systembartint、TigerDB、Material Design相关控件
 
 # 安装Demo
-[点击下载](apk/TigerVideo-debug.apk)
+[点击下载](http://fir.im/7qpv)
 
 # TODO
 后期会加入RxJava、同时会考虑将项目结构重构成MVP模式
