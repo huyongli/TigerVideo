@@ -5,7 +5,9 @@ import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.mvpview.VideoMvpView;
 import cn.ittiger.video.presenter.VideoPresenter;
 
+import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,9 +23,8 @@ import java.util.List;
  * @author laohu
  * @site http://ittiger.cn
  */
-public abstract class BaseFragment extends MvpLceFragment<SwipeRefreshLayout,
-                            List<VideoData>, VideoMvpView, VideoPresenter>
-                        implements VideoMvpView {
+public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, P extends MvpPresenter<V>>
+        extends MvpLceFragment<CV, M, V, P> {
 
     protected Context mContext;
 
@@ -87,11 +88,5 @@ public abstract class BaseFragment extends MvpLceFragment<SwipeRefreshLayout,
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
 
         return getActivity().getString(R.string.load_failed);
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-
-        presenter.refreshData(pullToRefresh);
     }
 }

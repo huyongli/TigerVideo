@@ -2,7 +2,6 @@ package cn.ittiger.video.presenter;
 
 import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.factory.ResultParseFactory;
-import cn.ittiger.video.http.DataType;
 import cn.ittiger.video.mvpview.VideoMvpView;
 import rx.Observable;
 import rx.Subscriber;
@@ -18,7 +17,8 @@ import java.util.List;
  * @author laohu
  * @site http://ittiger.cn
  */
-public abstract class VideoPresenter extends MvpBasePresenter<VideoMvpView> {
+public abstract class VideoPresenter extends MvpBasePresenter<VideoMvpView>
+        implements TypePresenter {
 
     private int mCurPage = 1;
 
@@ -41,8 +41,6 @@ public abstract class VideoPresenter extends MvpBasePresenter<VideoMvpView> {
     }
 
     public abstract Observable<String> getHttpCallObservable(int curPage);
-
-    public abstract DataType getType();
 
     void request(final boolean loadMore, final boolean pullToRefresh) {
 

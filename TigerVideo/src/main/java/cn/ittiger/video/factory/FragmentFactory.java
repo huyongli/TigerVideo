@@ -2,8 +2,8 @@ package cn.ittiger.video.factory;
 
 import cn.ittiger.video.fragment.BaseFragment;
 import cn.ittiger.video.bean.VideoTabData;
-import cn.ittiger.video.fragment.IFengFragment;
 import cn.ittiger.video.fragment.IFengTabFragment;
+import cn.ittiger.video.fragment.IFengVideoFragment;
 import cn.ittiger.video.fragment.NetEasyVideoFragment;
 import cn.ittiger.video.fragment.TtKbVideoFragment;
 import cn.ittiger.video.http.DataType;
@@ -28,7 +28,7 @@ public class FragmentFactory {
                 fragment = new TtKbVideoFragment();
                 break;
             case IFENG:
-                fragment = new IFengFragment();
+                fragment = new IFengVideoFragment();
                 break;
         }
         return fragment;

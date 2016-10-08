@@ -8,7 +8,9 @@ import cn.ittiger.video.adapter.VideoAdapter;
 import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.http.DataType;
 import cn.ittiger.video.factory.ResultParseFactory;
+import cn.ittiger.video.mvpview.VideoMvpView;
 import cn.ittiger.video.player.VideoPlayerHelper;
+import cn.ittiger.video.presenter.VideoPresenter;
 import cn.ittiger.video.ui.recycler.CommonRecyclerView;
 import cn.ittiger.video.ui.recycler.SpacesItemDecoration;
 import cn.ittiger.video.util.CallbackHandler;
@@ -34,8 +36,9 @@ import java.util.List;
  * @author laohu
  * @site http://ittiger.cn
  */
-public abstract class VideoFragment extends BaseFragment implements
-        CommonRecyclerView.LoadMoreListener {
+public abstract class VideoFragment extends
+        BaseFragment<SwipeRefreshLayout, List<VideoData>, VideoMvpView, VideoPresenter>
+        implements VideoMvpView, CommonRecyclerView.LoadMoreListener {
     @BindView(R.id.contentView)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.video_recycler_view)
@@ -99,7 +102,7 @@ public abstract class VideoFragment extends BaseFragment implements
     @Override
     public void loadData(boolean pullToRefresh) {
 
-        super.loadData(pullToRefresh);
+        presenter.refreshData(pullToRefresh);
         if(mIsFirstLoad) {
             VideoPlayerHelper.getInstance().setSmallVideoPlayerContainer(mSmallVideoPlayerContainer);
             mIsFirstLoad = false;

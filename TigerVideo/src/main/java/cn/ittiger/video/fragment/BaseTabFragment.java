@@ -4,10 +4,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ittiger.video.R;
 import cn.ittiger.video.adapter.TabAdapter;
+import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.bean.VideoTabData;
 import cn.ittiger.video.factory.ResultParseFactory;
 import cn.ittiger.video.http.DataType;
+import cn.ittiger.video.mvpview.VideoTabMvpView;
 import cn.ittiger.video.player.VideoPlayerHelper;
+import cn.ittiger.video.presenter.VideoPresenter;
+import cn.ittiger.video.presenter.VideoTabPresenter;
 import cn.ittiger.video.util.CallbackHandler;
 import cn.ittiger.video.util.DBManager;
 import retrofit2.Call;
@@ -21,6 +25,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -28,7 +33,8 @@ import java.util.List;
  * @author laohu
  * @site http://ittiger.cn
  */
-public abstract class BaseTabFragment extends BaseFragment {
+public abstract class BaseTabFragment extends
+        BaseFragment<LinearLayout, List<VideoTabData>, VideoTabMvpView, VideoTabPresenter> {
 
     @BindView(R.id.viewpager_video_tab)
     ViewPager mViewPager;
@@ -65,72 +71,18 @@ public abstract class BaseTabFragment extends BaseFragment {
     }
 
     @Override
-    public void refreshData() {
+    public void setData(List<VideoTabData> tabs) {
 
-        queryTab(new CallbackHandler<List<VideoTabData>>() {
-
-            @Override
-            public void callback(List<VideoTabData> baseTabs) {
-
-                if (baseTabs == null || baseTabs.size() == 0) {
-                    refreshFailed();
-                    return;
-                }
-                mTabAdapter = new TabAdapter(getChildFragmentManager(), baseTabs, getType());
-                mViewPager.setAdapter(mTabAdapter);
-                mTabPageIndicator.setVisibility(View.VISIBLE);
-                mTabPageIndicator.setupWithViewPager(mViewPager);
-
-                refreshSuccess();
-            }
-        });
+        mTabAdapter = new TabAdapter(getChildFragmentManager(), tabs, presenter.getType());
+        mViewPager.setAdapter(mTabAdapter);
+        mTabPageIndicator.setVisibility(View.VISIBLE);
+        mTabPageIndicator.setupWithViewPager(mViewPager);
     }
 
-    private void queryTab(final CallbackHandler<List<VideoTabData>> callback) {
+    @Override
+    public void loadData(boolean pullToRefresh) {
 
-        String[] whereArgs = {String.valueOf(getType().value())};
-        boolean isExist = DBManager.getInstance().getSQLiteDB().queryIfExist(VideoTabData.class, "type=?", whereArgs);
-        if(isExist) {
-            List<VideoTabData> tabs = DBManager.getInstance().getSQLiteDB().query(VideoTabData.class, "type=?", whereArgs);
-            queryHandler(tabs, callback);
-            return;
-        }
-        Call<String> call = getHttpCall();
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if (response.isSuccessful()) {
-                    List<VideoTabData> tabs = ResultParseFactory.parseTab(response.body(), getType());
-                    DBManager.getInstance().getSQLiteDB().save(tabs);
-                    queryHandler(tabs, callback);
-                } else {
-                    onFailure(call, new NullPointerException("not query tabs"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-
-                queryHandler(null, callback);
-            }
-        });
+        showLoading(pullToRefresh);
+        presenter.queryVideoTab(pullToRefresh);
     }
-
-    private void queryHandler(final List<VideoTabData> datas, final CallbackHandler<List<VideoTabData>> callback) {
-
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (callback != null) {
-                    callback.callback(datas);
-                }
-            }
-        });
-    }
-
-    public abstract Call<String> getHttpCall();
-
-    public abstract DataType getType();
 }
