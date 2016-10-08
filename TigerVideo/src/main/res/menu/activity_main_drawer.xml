@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="视频">
+        <menu>
+            <item
+                android:id="@+id/nav_net_easy"
+                android:icon="@drawable/nav_net_easy"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/net_easy_video"/>
+            <item
+                android:id="@+id/nav_ttkb"
+                android:icon="@drawable/nav_ttkb"
+                android:checkable="true"
+                android:title="@string/ttkb_video"/>
+            <item
+                android:id="@+id/nav_ifeng"
+                android:icon="@drawable/nav_ifeng"
+                android:checkable="true"
+                android:title="@string/ifeng_video"/>
+        </menu>
+    </item>
+
+    <item android:title="选项">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/nav_share"
+                android:checkable="true"
+                android:title="@string/share_app"/>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/nav_about"
+                android:checkable="true"
+                android:title="@string/about"/>
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/controller_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@color/common_black_color_alpha_70"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/play_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d_5"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="9sp"/>
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:max="100"
+            android:maxHeight="@dimen/d_3"
+            android:minHeight="@dimen/d_3"
+            android:progress="0"
+            android:progressDrawable="@drawable/video_seekbar_style"
+            android:thumb="@drawable/video_seekbar_icon"/>
+
+        <TextView
+            android:id="@+id/total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="9sp"/>
+
+        <ImageView
+            android:id="@+id/full_screen_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/d_5"
+            android:paddingRight="@dimen/d_5"
+            android:src="@drawable/ic_fullscreen"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/video_cache_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:max="100"
+        android:maxHeight="@dimen/d_2"
+        android:minHeight="@dimen/d_2"
+        android:progress="0"
+        android:progressDrawable="@drawable/video_seekbar_style"/>
+
+</merge>

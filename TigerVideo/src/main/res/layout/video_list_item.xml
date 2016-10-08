@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_video_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:id="@+id/iv_video_item_play_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_play"/>
+
+    <TextView
+        android:id="@+id/tv_video_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:singleLine="true"
+        android:paddingLeft="@dimen/d_10"
+        android:paddingRight="@dimen/d_10"
+        android:paddingBottom="@dimen/d_5"
+        android:paddingTop="@dimen/d_5"
+        android:layout_marginBottom="@dimen/d_5"
+        android:layout_marginRight="@dimen/d_5"
+        android:background="@drawable/video_duration_bg"
+        android:textSize="@dimen/sp12"
+        android:textColor="@color/common_white_color_alpha_100"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/video_shade_bg">
+        <TextView
+            android:id="@+id/tv_video_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_marginLeft="@dimen/d_15"
+            android:layout_marginRight="@dimen/d_15"
+            android:layout_marginTop="@dimen/d_5"
+            android:layout_marginBottom="@dimen/d_10"
+            android:textColor="@color/common_white_color_alpha_100"
+            android:textSize="@dimen/sp18"/>
+    </RelativeLayout>
+
+</RelativeLayout>

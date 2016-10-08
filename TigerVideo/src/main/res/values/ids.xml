@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="id_video_texture_view" type="id"/>
+    <item name="tag_video_list_item" type="id"/>
+</resources>

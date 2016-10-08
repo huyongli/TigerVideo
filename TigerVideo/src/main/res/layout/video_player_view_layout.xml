@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/video_player_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <!-- 播放器中间的播放，暂停按钮 -->
+        <ImageView
+            android:id="@+id/iv_video_play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <!-- 正在加载进度条 -->
+        <ProgressBar
+            android:id="@+id/video_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <!-- 底部控制进度条 -->
+        <cn.ittiger.video.player.VideoPlayerControllerView
+            android:id="@+id/videoControllerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_controller_height"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
+
+        <!-- 全屏时调整音量的进度条 -->
+        <LinearLayout
+            android:id="@+id/video_volume"
+            android:layout_width="@dimen/d_30"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d_40"
+            android:layout_marginStart="@dimen/d_40"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:paddingTop="@dimen/d_10"
+                android:paddingBottom="@dimen/d_5"
+                android:gravity="center_horizontal"
+                android:background="@drawable/video_attr_progress_bg"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:id="@+id/video_volume_progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/video_attr_progress_vertical"
+                    android:maxWidth="@dimen/d_3"
+                    android:minWidth="@dimen/d_3"
+                    android:max="100"
+                    android:progress="0"/>
+                <ImageView
+                    android:id="@+id/video_volume_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/d_5"
+                    android:src="@drawable/ic_volume"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"/>
+        </LinearLayout>
+
+        <!-- 全屏时调整亮度的进度条 -->
+        <LinearLayout
+            android:id="@+id/video_brightness"
+            android:layout_width="@dimen/d_30"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d_40"
+            android:layout_marginEnd="@dimen/d_40"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:paddingTop="@dimen/d_10"
+                android:paddingBottom="@dimen/d_5"
+                android:gravity="center_horizontal"
+                android:background="@drawable/video_attr_progress_bg"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:id="@+id/video_brightness_progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/video_attr_progress_vertical"
+                    android:maxWidth="@dimen/d_3"
+                    android:minWidth="@dimen/d_3"
+                    android:max="100"
+                    android:progress="0"/>
+                <ImageView
+                    android:id="@+id/video_brightness_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/d_5"
+                    android:src="@drawable/ic_brightness"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"/>
+        </LinearLayout>
+
+        <!-- 全屏时快进后退的进度条 -->
+        <LinearLayout
+            android:id="@+id/video_change_progress_view"
+            android:layout_width="@dimen/d_144"
+            android:layout_height="wrap_content"
+            android:background="@drawable/video_attr_progress_bg"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/video_change_progress_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/d_14"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/d_9"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/video_change_progress_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp12"
+                    android:textColor="@color/video_player_change_progress_txt_color"/>
+                <TextView
+                    android:id="@+id/video_change_progress_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp12"
+                    android:textColor="@color/common_white_color_alpha_100"/>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/video_change_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="@dimen/d_3"
+                android:minHeight="@dimen/d_3"
+                android:layout_marginTop="@dimen/d_5"
+                android:layout_marginBottom="@dimen/d_12"
+                android:layout_marginRight="@dimen/d_12"
+                android:layout_marginEnd="@dimen/d_12"
+                android:layout_marginLeft="@dimen/d_12"
+                android:layout_marginStart="@dimen/d_12"
+                android:progressDrawable="@drawable/video_seekbar_style"
+                android:max="100"
+                android:progress="0"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+</merge>
