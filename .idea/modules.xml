@@ -5,8 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/TigerDB/TigerDB.iml" filepath="$PROJECT_DIR$/TigerDB/TigerDB.iml" />
       <module fileurl="file://$PROJECT_DIR$/TigerVideo.iml" filepath="$PROJECT_DIR$/TigerVideo.iml" />
       <module fileurl="file://$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" filepath="$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" filepath="$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>

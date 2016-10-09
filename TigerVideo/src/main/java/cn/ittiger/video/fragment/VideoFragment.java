@@ -9,6 +9,7 @@ import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.mvpview.VideoMvpView;
 import cn.ittiger.video.player.VideoPlayerHelper;
 import cn.ittiger.video.presenter.VideoPresenter;
+import cn.ittiger.video.ui.LoadingView;
 import cn.ittiger.video.ui.recycler.CommonRecyclerView;
 import cn.ittiger.video.ui.recycler.SpacesItemDecoration;
 import cn.ittiger.video.util.UIUtil;
@@ -94,6 +95,7 @@ public abstract class VideoFragment extends
     @Override
     public void loadData(boolean pullToRefresh) {
 
+        showLoading(pullToRefresh);
         presenter.refreshData(pullToRefresh);
         if(mIsFirstLoad) {
             VideoPlayerHelper.getInstance().setSmallVideoPlayerContainer(mSmallVideoPlayerContainer);
@@ -176,6 +178,5 @@ public abstract class VideoFragment extends
         super.onDestroyView();
         mVideoAdapter = null;
         mIsFirstLoad = true;
-        presenter.detachView(false);
     }
 }

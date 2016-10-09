@@ -43,6 +43,7 @@ public class LoadingView extends View {
      * 球的动画变化器
      */
     private BallAnimator mBallAnimator;
+    private boolean mIsAnimating = false;
 
     public LoadingView(Context context) {
 
@@ -109,11 +110,15 @@ public class LoadingView extends View {
     public void start() {
 
         mBallAnimator.start();
+        mIsAnimating = true;
     }
 
     public void stop() {
 
-        mBallAnimator.stop();
+        if(mIsAnimating) {
+            mBallAnimator.stop();
+            mIsAnimating = false;
+        }
     }
 
     public class Ball {

@@ -1,10 +1,10 @@
 package cn.ittiger.video.fragment;
 
 import cn.ittiger.video.R;
+import cn.ittiger.video.ui.LoadingView;
 import rx.Observable;
-import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
@@ -27,7 +27,6 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
         extends MvpLceFragment<CV, M, V, P> {
 
     protected Context mContext;
-    private Subscription mSubscription;
 
     @Override
     public void onAttach(Context context) {
@@ -51,6 +50,7 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        showLoading(false);
         if(isInitRefreshEnable() && isDelayRefreshEnable() == false) {
             loadData(false);
         }
@@ -61,7 +61,7 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
 
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser && isInitRefreshEnable() == false && isDelayRefreshEnable()) {
-            loadData(false);
+            refreshData(false);
         }
     }
 
@@ -70,7 +70,8 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
         if(presenter != null) {
             loadData(pullToRefresh);
         } else {
-            mSubscription = Observable.timer(50, TimeUnit.MILLISECONDS)
+            Observable.timer(50, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Long>() {
                         @Override
                         public void call(Long aLong) {
@@ -107,11 +108,34 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
     }
 
     @Override
+    public void showLoading(boolean pullToRefresh) {
+
+        super.showLoading(pullToRefresh);
+        if(!pullToRefresh) {
+            ((LoadingView)loadingView).start();
+        }
+    }
+
+    @Override
+    public void showContent() {
+
+        super.showContent();
+        ((LoadingView)loadingView).stop();
+    }
+
+    @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+
+        super.showError(e, pullToRefresh);
+        if(!pullToRefresh) {
+            ((LoadingView)loadingView).stop();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
 
         super.onDestroyView();
-        if(mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+        presenter = null;
     }
 }

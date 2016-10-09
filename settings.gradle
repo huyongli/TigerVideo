@@ -1,1 +1,1 @@
-include ':app', ':TigerDB', ':TigerVideo'
+include ':TigerDB', ':TigerVideo'
