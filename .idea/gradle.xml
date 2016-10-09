@@ -14,14 +14,6 @@
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/TigerDB" />
-            <option value="$PROJECT_DIR$/TigerVideo" />
-            <option value="$PROJECT_DIR$/app" />
-          </set>
-        </option>
       </GradleProjectSettings>
     </option>
   </component>

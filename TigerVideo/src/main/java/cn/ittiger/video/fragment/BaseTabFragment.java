@@ -4,21 +4,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ittiger.video.R;
 import cn.ittiger.video.adapter.TabAdapter;
-import cn.ittiger.video.bean.VideoData;
 import cn.ittiger.video.bean.VideoTabData;
-import cn.ittiger.video.factory.ResultParseFactory;
-import cn.ittiger.video.http.DataType;
 import cn.ittiger.video.mvpview.VideoTabMvpView;
 import cn.ittiger.video.player.VideoPlayerHelper;
-import cn.ittiger.video.presenter.VideoPresenter;
 import cn.ittiger.video.presenter.VideoTabPresenter;
-import cn.ittiger.video.util.CallbackHandler;
-import cn.ittiger.video.util.DBManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -34,7 +24,8 @@ import java.util.List;
  * @site http://ittiger.cn
  */
 public abstract class BaseTabFragment extends
-        BaseFragment<LinearLayout, List<VideoTabData>, VideoTabMvpView, VideoTabPresenter> {
+        BaseFragment<LinearLayout, List<VideoTabData>, VideoTabMvpView, VideoTabPresenter>
+        implements VideoTabMvpView {
 
     @BindView(R.id.viewpager_video_tab)
     ViewPager mViewPager;

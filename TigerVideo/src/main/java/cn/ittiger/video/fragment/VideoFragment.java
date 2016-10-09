@@ -6,20 +6,13 @@ import butterknife.OnClick;
 import cn.ittiger.video.R;
 import cn.ittiger.video.adapter.VideoAdapter;
 import cn.ittiger.video.bean.VideoData;
-import cn.ittiger.video.http.DataType;
-import cn.ittiger.video.factory.ResultParseFactory;
 import cn.ittiger.video.mvpview.VideoMvpView;
 import cn.ittiger.video.player.VideoPlayerHelper;
 import cn.ittiger.video.presenter.VideoPresenter;
 import cn.ittiger.video.ui.recycler.CommonRecyclerView;
 import cn.ittiger.video.ui.recycler.SpacesItemDecoration;
-import cn.ittiger.video.util.CallbackHandler;
 import cn.ittiger.video.util.UIUtil;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,7 +20,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.util.List;

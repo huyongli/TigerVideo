@@ -28,7 +28,7 @@ public class FragmentFactory {
                 fragment = new TtKbVideoFragment();
                 break;
             case IFENG:
-                fragment = new IFengVideoFragment();
+                fragment = new IFengTabFragment();
                 break;
         }
         return fragment;
@@ -39,7 +39,7 @@ public class FragmentFactory {
         BaseFragment fragment = null;
         switch (type) {
             case IFENG:
-                fragment = new IFengTabFragment();
+                fragment = new IFengVideoFragment();
                 break;
         }
 

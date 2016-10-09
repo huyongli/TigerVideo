@@ -1,9 +1,10 @@
 package cn.ittiger.video.fragment;
 
 import cn.ittiger.video.R;
-import cn.ittiger.video.bean.VideoData;
-import cn.ittiger.video.mvpview.VideoMvpView;
-import cn.ittiger.video.presenter.VideoPresenter;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
@@ -12,12 +13,11 @@ import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author laohu
@@ -27,6 +27,7 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
         extends MvpLceFragment<CV, M, V, P> {
 
     protected Context mContext;
+    private Subscription mSubscription;
 
     @Override
     public void onAttach(Context context) {
@@ -64,6 +65,21 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
         }
     }
 
+    private void refreshData(final boolean pullToRefresh) {
+
+        if(presenter != null) {
+            loadData(pullToRefresh);
+        } else {
+            mSubscription = Observable.timer(50, TimeUnit.MILLISECONDS)
+                    .subscribe(new Action1<Long>() {
+                        @Override
+                        public void call(Long aLong) {
+                            refreshData(pullToRefresh);
+                        }
+                    });
+        }
+    }
+
     /**
      * Fragment数据视图
      * @param inflater
@@ -88,5 +104,14 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
 
         return getActivity().getString(R.string.load_failed);
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        super.onDestroyView();
+        if(mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
     }
 }
