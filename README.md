@@ -2,6 +2,9 @@
 
 此App是为了练习Android视频播放而完成的。
 
+# 主要使用的开源库
+Mosby(一个MVP框架)、RxJava、Retrofit2、ButterKnife、Glide、Systembartint、TigerDB、Material Design相关控件
+
 # 功能
 主要完成了如下功能：  
 1. 列表中播放视频  
@@ -22,14 +25,8 @@
 <img src="screenshots/5.jpg" width = "640" height = "360" alt=""/>
 <img src="screenshots/6.jpg" width = "360" height = "640" alt=""/>
 
-# 主要使用的开源库
-Retrofit2、ButterKnife、Glide、Systembartint、TigerDB、Material Design相关控件
-
 # 安装Demo
 [点击下载](http://fir.im/7qpv)
-
-# TODO
-后期会加入RxJava、同时会考虑将项目结构重构成MVP模式
 
 # 声明
 本项目使用的视频数据分别来自于网易，头条快报，凤凰视频，在此表示感谢，视频数据API版权归原所属公司所有，请勿用于其他用途！若内容有侵权请联系本人进行删除处理，本项目仅供测试学习使用，他人不得滥用其中数据API，他人用于其他用途所造成的纠纷与本人无关。
