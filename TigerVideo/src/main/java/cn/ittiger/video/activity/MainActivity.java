@@ -6,7 +6,7 @@ import cn.ittiger.video.R;
 import cn.ittiger.video.app.TigerApplication;
 import cn.ittiger.video.fragment.BaseFragment;
 import cn.ittiger.video.factory.FragmentFactory;
-import cn.ittiger.video.fragment.AboutFragment;
+import cn.ittiger.video.fragment.NameFragment;
 import cn.ittiger.video.http.DataType;
 import cn.ittiger.video.player.VideoPlayerHelper;
 import cn.ittiger.video.util.ShareHelper;
@@ -15,9 +15,11 @@ import cn.ittiger.video.util.UIUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
-    SparseArray<BaseFragment> mFragmentSparseArray = new SparseArray<>();
+    SparseArray<Fragment> mFragmentSparseArray = new SparseArray<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         int id = item.getItemId();
-        BaseFragment fragment = mFragmentSparseArray.get(id);
+        Fragment fragment = mFragmentSparseArray.get(id);
         if(fragment == null) {
             switch (id) {
                 case R.id.nav_net_easy:
@@ -115,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ShareHelper.shareApp(this);
                     break;
                 case R.id.nav_about:
-                    fragment = new AboutFragment();
+                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                    fragment = null;
                     break;
             }
         }
@@ -168,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * 切换界面
      * @param fragment
      */
-    private void switchFragment(BaseFragment fragment) {
+    private void switchFragment(Fragment fragment) {
 
-        setTitle(fragment.getName());
+        setTitle(((NameFragment)fragment).getName());
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 

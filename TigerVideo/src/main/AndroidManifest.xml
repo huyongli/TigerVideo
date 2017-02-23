@@ -30,6 +30,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullScreenTheme">
         </activity>
+        <activity
+            android:name=".activity.AboutActivity"/>
+        <activity
+            android:name=".activity.WebPageActivity"/>
     </application>
 
 </manifest>

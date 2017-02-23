@@ -16,7 +16,7 @@
 
     <string name="about_author">作者：老胡</string>
     <string name="about_blog">博客：<a href="http://ittiger.cn">http://ittiger.cn</a></string>
-    <string name="about_contact">微信：huyongli1989</string>
+    <string name="about_contact">QQ群：106510493(点击复制)</string>
     <string name="about_project">项目地址：\n<a href="https://github.com/huyongli/TigerVideo">https://github.com/huyongli/TigerVideo</a></string>
     <string name="about_project_desc">项目简介：\nTigerVideo是我本着学习的目的实现的一个观看视频的App，后期会不断更新完善此App，并尝试引入更多的新技术。欢迎喜欢的朋友star，fork，issue</string>
 

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @site http://ittiger.cn
  */
 public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, P extends MvpPresenter<V>>
-        extends MvpLceFragment<CV, M, V, P> {
+        extends MvpLceFragment<CV, M, V, P> implements NameFragment {
 
     protected Context mContext;
 
@@ -98,8 +98,6 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
 
         return false;
     }
-
-    public abstract int getName();
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
