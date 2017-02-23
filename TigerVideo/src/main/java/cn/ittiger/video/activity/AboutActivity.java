@@ -60,7 +60,7 @@ public class AboutActivity extends AppCompatActivity {
                 url = "http://ittiger.cn";
                 break;
             case R.id.tv_about_github:
-                url = "https://github.com/huyongli/TigerIM";
+                url = "https://github.com/huyongli/TigerVideo";
                 break;
             case R.id.tv_about_contact:
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
