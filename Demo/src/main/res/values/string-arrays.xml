@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="video_url">
+        <item>http://flv3.bn.netease.com/videolib3/1709/13/CrqgX5261/SD/CrqgX5261-mobile.mp4</item>
+        <item>http://flv3.bn.netease.com/videolib3/1709/15/XUeFJ9893/SD/XUeFJ9893-mobile.mp4</item>
+        <item>http://flv3.bn.netease.com/videolib3/1709/16/BdXrp2108/SD/BdXrp2108-mobile.mp4</item>
+    </string-array>
+
+    <string-array name="video_cover">
+        <item>http://vimg2.ws.126.net/image/snapshot/2017/9/F/0/VITA4OQF0.jpg</item>
+        <item>http://vimg2.ws.126.net/image/snapshot/2017/9/N/S/VXTFK8ANS.jpg</item>
+        <item>http://vimg2.ws.126.net/image/snapshot/2017/9/O/T/VVTI2L4OT.jpg</item>
+    </string-array>
+
+    <string-array name="video_title">
+        <item>看登贝莱对尤文的比赛，巴萨可能买了一个大坑</item>
+        <item>球星球迷看到梅西表演后的震撼反应！不是人啊</item>
+        <item>2岁幼儿互殴，家长还一直拍视频，我都快看不下去了！</item>
+    </string-array>
+
+    <string-array name="tabs">
+        <item>Tab1</item>
+        <item>Tab2</item>
+        <item>Tab3</item>
+        <item>Tab4</item>
+        <item>Tab5</item>
+    </string-array>
+</resources>
