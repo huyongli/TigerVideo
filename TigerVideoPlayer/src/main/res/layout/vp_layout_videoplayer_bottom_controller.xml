@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vp_video_bottom_controller_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/vp_bottom_controller_height"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/vp_bottom_controller_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <TextView
+        android:id="@+id/vp_video_play_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/vp_bottom_padding"
+        android:text="@string/vp_time_0"
+        android:textColor="@color/vp_bottom_controller_text_color"/>
+
+    <SeekBar
+        android:id="@+id/vp_video_seek_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@null"
+        android:max="100"
+        android:maxHeight="@dimen/vp_seek_height"
+        android:minHeight="@dimen/vp_seek_height"
+        android:paddingBottom="@dimen/vp_seek_padding_vertical"
+        android:paddingEnd="@dimen/vp_seek_padding_horizontal"
+        android:paddingStart="@dimen/vp_seek_padding_horizontal"
+        android:paddingTop="@dimen/vp_seek_padding_vertical"
+        android:progressDrawable="@drawable/vp_bottom_controller_seek_progress_drawable"
+        android:thumb="@drawable/vp_bottom_controller_seek_thumb"/>
+
+    <TextView
+        android:id="@+id/vp_video_total_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vp_time_0"
+        android:textColor="@color/vp_bottom_controller_text_color"/>
+
+    <ImageView
+        android:id="@+id/vp_video_fullscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/vp_bottom_padding"
+        android:paddingStart="@dimen/vp_bottom_padding"
+        android:scaleType="centerInside"
+        android:src="@drawable/vp_ic_fullscreen"/>
+
+</LinearLayout>

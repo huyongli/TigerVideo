@@ -1,0 +1,7 @@
+<resources>
+    <string name="vp_time_0">00:00</string>
+    <string name="vp_load_failed">Load Failed</string>
+    <string name="vp_click_retry">Click Retry</string>
+    <string name="vp_no_url">No Video Url</string>
+    <string name="vp_no_network">No Network</string>
+</resources>

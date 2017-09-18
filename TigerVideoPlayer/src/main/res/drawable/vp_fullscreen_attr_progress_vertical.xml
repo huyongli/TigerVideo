@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <gradient
+                android:centerColor="@color/vp_fullscreen_att_seekbar_color"
+                android:centerY="0.75"
+                android:endColor="@color/vp_fullscreen_att_seekbar_color"
+                android:startColor="@color/vp_fullscreen_att_seekbar_color"
+                android:angle="270"/>
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip
+            android:clipOrientation="vertical"
+            android:gravity="bottom">
+            <shape>
+                <gradient
+                    android:centerColor="@color/vp_fullscreen_att_seekbar_progress_color"
+                    android:centerY="0.75"
+                    android:endColor="@color/vp_fullscreen_att_seekbar_progress_color"
+                    android:startColor="@color/vp_fullscreen_att_seekbar_progress_color"
+                    android:angle="270"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>

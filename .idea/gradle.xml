@@ -8,8 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/TigerDB" />
             <option value="$PROJECT_DIR$/TigerVideo" />
+            <option value="$PROJECT_DIR$/TigerVideoPlayer" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

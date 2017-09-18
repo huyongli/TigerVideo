@@ -1,1 +1,1 @@
-include ':TigerDB', ':TigerVideo'
+include ':TigerVideo', ':TigerVideoPlayer'

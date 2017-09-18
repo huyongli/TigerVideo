@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TigerDB/TigerDB.iml" filepath="$PROJECT_DIR$/TigerDB/TigerDB.iml" />
       <module fileurl="file://$PROJECT_DIR$/TigerVideo.iml" filepath="$PROJECT_DIR$/TigerVideo.iml" />
       <module fileurl="file://$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" filepath="$PROJECT_DIR$/TigerVideo/TigerVideo-TigerVideo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TigerVideoPlayer/TigerVideoPlayer.iml" filepath="$PROJECT_DIR$/TigerVideoPlayer/TigerVideoPlayer.iml" />
     </modules>
   </component>
 </project>

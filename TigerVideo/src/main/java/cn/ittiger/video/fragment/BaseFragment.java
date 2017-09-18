@@ -1,11 +1,5 @@
 package cn.ittiger.video.fragment;
 
-import cn.ittiger.video.R;
-import cn.ittiger.video.ui.LoadingView;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
@@ -17,6 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cn.ittiger.video.R;
+import cn.ittiger.video.ui.LoadingView;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +27,7 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
         extends MvpLceFragment<CV, M, V, P> implements NameFragment {
 
     protected Context mContext;
+    private boolean mIsInited = false;
 
     @Override
     public void onAttach(Context context) {
@@ -60,7 +61,8 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
     public void setUserVisibleHint(boolean isVisibleToUser) {
 
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isInitRefreshEnable() == false && isDelayRefreshEnable()) {
+        if(isVisibleToUser && isInitRefreshEnable() == false && isDelayRefreshEnable() && mIsInited == false) {
+            mIsInited = true;
             refreshData(false);
         }
     }
@@ -135,5 +137,6 @@ public abstract class BaseFragment<CV extends View, M, V extends MvpLceView<M>, 
 
         super.onDestroyView();
         presenter = null;
+        mIsInited = false;
     }
 }

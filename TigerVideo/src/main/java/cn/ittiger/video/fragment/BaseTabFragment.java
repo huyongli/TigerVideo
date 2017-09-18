@@ -1,14 +1,5 @@
 package cn.ittiger.video.fragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import cn.ittiger.video.R;
-import cn.ittiger.video.adapter.TabAdapter;
-import cn.ittiger.video.bean.VideoTabData;
-import cn.ittiger.video.mvpview.VideoTabMvpView;
-import cn.ittiger.video.player.VideoPlayerHelper;
-import cn.ittiger.video.presenter.VideoTabPresenter;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -16,6 +7,15 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.ittiger.player.PlayerManager;
+import cn.ittiger.video.R;
+import cn.ittiger.video.adapter.TabAdapter;
+import cn.ittiger.video.bean.VideoTabData;
+import cn.ittiger.video.mvpview.VideoTabMvpView;
+import cn.ittiger.video.presenter.VideoTabPresenter;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public abstract class BaseTabFragment extends
             @Override
             public void onPageSelected(int position) {
 
-                VideoPlayerHelper.getInstance().stop();
+                PlayerManager.getInstance().stop();
             }
 
             @Override

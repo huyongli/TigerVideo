@@ -13,7 +13,6 @@
         android:background="@color/colorPrimaryDark"
         app:tabIndicatorColor="@android:color/white"
         app:tabTextColor="@android:color/white"
-        app:tabSelectedTextColor="@android:color/holo_blue_light"
         app:tabIndicatorHeight="@dimen/d_2">
     </android.support.design.widget.TabLayout>
 

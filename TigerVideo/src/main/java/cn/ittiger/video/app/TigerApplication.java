@@ -1,12 +1,15 @@
 package cn.ittiger.video.app;
 
+import android.app.Application;
+
 import butterknife.ButterKnife;
 import cn.ittiger.database.SQLiteDBConfig;
+import cn.ittiger.player.Config;
+import cn.ittiger.player.PlayerManager;
+import cn.ittiger.player.factory.ExoPlayerFactory;
 import cn.ittiger.video.R;
 import cn.ittiger.video.util.ApplicationHelper;
 import cn.ittiger.video.util.CrashHandler;
-
-import android.app.Application;
 
 /**
  * @author laohu
@@ -25,6 +28,13 @@ public class TigerApplication extends Application implements IDbApplication {
         CrashHandler.getInstance().init(getApplicationContext());
         ApplicationHelper.getInstance().init(this);
         ButterKnife.setDebug(true);
+        PlayerManager.loadConfig(
+            new Config.Builder(this)
+            .enableSmallWindowPlay()
+            .cache(false)
+            .buildPlayerFactory(new ExoPlayerFactory(this))
+            .build()
+        );
     }
 
     @Override

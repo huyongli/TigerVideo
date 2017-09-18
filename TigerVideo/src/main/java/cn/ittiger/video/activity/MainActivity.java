@@ -1,17 +1,5 @@
 package cn.ittiger.video.activity;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import cn.ittiger.video.R;
-import cn.ittiger.video.app.TigerApplication;
-import cn.ittiger.video.fragment.BaseFragment;
-import cn.ittiger.video.factory.FragmentFactory;
-import cn.ittiger.video.fragment.NameFragment;
-import cn.ittiger.video.http.DataType;
-import cn.ittiger.video.player.VideoPlayerHelper;
-import cn.ittiger.video.util.ShareHelper;
-import cn.ittiger.video.util.UIUtil;
-
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.annotation.TargetApi;
@@ -30,6 +18,18 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.ittiger.player.PlayerManager;
+import cn.ittiger.video.R;
+import cn.ittiger.video.app.TigerApplication;
+import cn.ittiger.video.factory.FragmentFactory;
+import cn.ittiger.video.fragment.BaseFragment;
+import cn.ittiger.video.fragment.NameFragment;
+import cn.ittiger.video.http.DataType;
+import cn.ittiger.video.util.ShareHelper;
+import cn.ittiger.video.util.UIUtil;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        VideoPlayerHelper.init(this);
         init();
     }
 
@@ -138,14 +137,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onDestroy();
         ((TigerApplication)getApplication()).onDestroy();
-        VideoPlayerHelper.getInstance().stop();
+        PlayerManager.getInstance().release();
     }
 
     @Override
     protected void onPause() {
 
         super.onPause();
-        VideoPlayerHelper.getInstance().pause();
+        PlayerManager.getInstance().pause();
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        PlayerManager.getInstance().resume();
     }
 
     private long exitTime = 0;

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vp_load_failed">加载失败</string>
+    <string name="vp_click_retry">点击重试</string>
+    <string name="vp_no_url">无视频地址</string>
+    <string name="vp_no_network">网络不可用</string>
+</resources>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <!-- 视频画面显示媒介TextureView的父容器 -->
+    <FrameLayout
+        android:id="@+id/vp_video_surface_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <!-- 视频预览图 -->
+    <ImageView
+        android:id="@+id/vp_video_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:scaleType="fitCenter"/>
+
+    <ViewStub
+        android:id="@+id/vp_fullscreen_view_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/vp_fullscreen_gesture_view"
+        android:layout="@layout/vp_fullscreen_gesture_view"/>
+
+    <!-- 底部控制条View -->
+    <include layout="@layout/vp_layout_videoplayer_bottom_controller"/>
+
+    <!-- 底部控制条不显示的时候显示进度的progressbar -->
+    <ProgressBar
+        android:id="@+id/vp_video_bottom_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/vp_bottom_progress_bar_height"
+        android:layout_alignParentBottom="true"
+        android:max="100"
+        android:progressDrawable="@drawable/vp_bottom_controller_seek_progress_drawable" />
+
+    <!-- 视频加载loading -->
+    <ProgressBar
+        android:id="@+id/vp_video_loading"
+        android:layout_width="@dimen/vp_video_play_button_size"
+        android:layout_height="@dimen/vp_video_play_button_size"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/vp_loading_selector"
+        android:visibility="invisible" />
+
+    <!-- 中间的播放按钮 -->
+    <ImageView
+        android:id="@+id/vp_video_play"
+        android:layout_width="@dimen/vp_video_play_button_size"
+        android:layout_height="@dimen/vp_video_play_button_size"
+        android:src="@drawable/vp_play_selector"
+        android:layout_centerInParent="true"/>
+
+    <!-- 加载失败的提示信息 -->
+    <LinearLayout
+        android:id="@+id/vp_video_play_error_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/vp_error_margin"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/vp_error_text_size"
+            android:textColor="@color/vp_error_text_color"
+            android:text="@string/vp_load_failed"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/vp_error_padding_horizontal"
+            android:paddingEnd="@dimen/vp_error_padding_horizontal"
+            android:gravity="center"
+            android:paddingTop="@dimen/vp_error_padding_vertical"
+            android:paddingBottom="@dimen/vp_error_padding_vertical"
+            android:textSize="@dimen/vp_error_text_size"
+            android:textColor="@color/vp_error_text_color"
+            android:text="@string/vp_click_retry"
+            android:background="@drawable/vp_error_text_bg"/>
+    </LinearLayout>
+
+    <!-- 小窗口播放时的关闭按钮 -->
+    <ImageView
+        android:id="@+id/vp_video_small_window_back"
+        android:layout_width="@dimen/vp_small_window_back_size"
+        android:layout_height="@dimen/vp_small_window_back_size"
+        android:layout_marginLeft="@dimen/vp_small_window_back_margin"
+        android:layout_marginStart="@dimen/vp_small_window_back_margin"
+        android:layout_marginTop="@dimen/vp_small_window_back_margin"
+        android:background="@drawable/vp_small_window_back_selector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/vp_video_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/vp_video_header_view_height"
+        android:orientation="horizontal"
+        android:background="@drawable/vp_video_header_view_bg"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/vp_video_fullScreen_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/vp_video_header_view_padding"
+            android:layout_marginLeft="@dimen/vp_video_header_view_padding"
+            android:paddingLeft="@dimen/vp_video_header_view_padding"
+            android:paddingStart="@dimen/vp_video_header_view_padding"
+            android:paddingEnd="@dimen/vp_video_header_view_padding"
+            android:paddingRight="@dimen/vp_video_header_view_padding"
+            android:background="@drawable/vp_fullscreen_back"/>
+        <TextView
+            android:id="@+id/vp_video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/vp_video_header_view_padding"
+            android:layout_marginLeft="@dimen/vp_video_header_view_padding"
+            android:paddingRight="@dimen/vp_video_header_view_padding"
+            android:paddingEnd="@dimen/vp_video_header_view_padding"
+            android:textColor="@color/vp_video_title_color"
+            android:textSize="@dimen/vp_video_title_text_size"
+            android:maxLines="2"/>
+    </LinearLayout>
+
+</merge>

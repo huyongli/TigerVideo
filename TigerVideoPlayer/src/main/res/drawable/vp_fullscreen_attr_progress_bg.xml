@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners
+        android:radius="@dimen/vp_fullscreen_volume_progress_width"/>
+
+    <solid
+        android:color="@color/vp_fullscreen_att_progress_color"/>
+</shape>

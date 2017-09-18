@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="vp_bottom_controller_text_color">@android:color/white</color>
+    <color name="vp_seek_thumb_normal_color">@android:color/white</color>
+    <color name="vp_seek_thumb_press_color">#fff0f0f0</color>
+    <color name="vp_seek_background_color">#a5ffffff</color>
+    <color name="vp_seek_buffering_color">#ffffffff</color>
+    <color name="vp_seek_progress_color">#ffe72c00</color>
+    <color name="vp_error_text_color">@android:color/white</color>
+    <color name="vp_video_title_color">@android:color/white</color>
+    <color name="vp_fullscreen_seek_total_text_color">@android:color/white</color>
+    <color name="vp_fullscreen_seek_current_text_color">#ffe72c00</color>
+    <color name="vp_fullscreen_att_progress_color">#B2000000</color>
+    <color name="vp_fullscreen_att_seekbar_color">#ff666666</color>
+    <color name="vp_fullscreen_att_seekbar_progress_color">#ffe72c00</color>
+</resources>

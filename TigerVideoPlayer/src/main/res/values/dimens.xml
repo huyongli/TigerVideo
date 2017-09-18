@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="vp_bottom_controller_height">50dp</dimen>
+    <dimen name="vp_bottom_padding">14dp</dimen>
+    <dimen name="vp_seek_thumb_size">15dp</dimen>
+    <dimen name="vp_seek_height">1dp</dimen>
+    <dimen name="vp_seek_radius">1.5dp</dimen>
+    <dimen name="vp_seek_padding_horizontal">12dp</dimen>
+    <dimen name="vp_seek_padding_vertical">8dp</dimen>
+    <dimen name="vp_bottom_progress_bar_height">1.5dp</dimen>
+    <dimen name="vp_video_play_button_size">45dp</dimen>
+    <dimen name="vp_video_header_view_height">40dp</dimen>
+    <dimen name="vp_video_header_view_padding">5dp</dimen>
+    <dimen name="vp_video_title_text_size">14sp</dimen>
+    <dimen name="vp_error_text_size">14sp</dimen>
+    <dimen name="vp_error_margin">10dp</dimen>
+    <dimen name="vp_error_padding_horizontal">10dp</dimen>
+    <dimen name="vp_error_padding_vertical">6dp</dimen>
+    <dimen name="vp_error_radius">4dp</dimen>
+    <dimen name="vp_small_window_back_margin">6dp</dimen>
+    <dimen name="vp_small_window_back_size">24dp</dimen>
+    <dimen name="vp_fullscreen_volume_width">30dp</dimen>
+    <dimen name="vp_fullscreen_volume_margin">40dp</dimen>
+    <dimen name="vp_fullscreen_volume_progress_width">3dp</dimen>
+    <dimen name="vp_fullscreen_volume_padding_top">10dp</dimen>
+    <dimen name="vp_fullscreen_volume_padding_bottom">5dp</dimen>
+    <dimen name="vp_fullscreen_seek_view_width">144dp</dimen>
+    <dimen name="vp_fullscreen_seek_text_size">12sp</dimen>
+    <dimen name="vp_fullscreen_seek_bar_margin">12dp</dimen>
+    <dimen name="vp_fullscreen_seek_icon_margin_top">14dp</dimen>
+    <dimen name="vp_fullscreen_seek_icon_margin_bottom">9dp</dimen>
+</resources>
