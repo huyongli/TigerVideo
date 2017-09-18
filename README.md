@@ -19,6 +19,11 @@
 # TigerVideoPlayer的使用
 该库实现了一行代码实现视频播放，一行代码开启小窗口播放，使用简单。
 
+### Gradle
+```
+compile 'cn.ittiger:TigerVideoPlayer:1.0'
+```
+
 ### 视频播放
 ```
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,7 +72,7 @@ PlayerManager.loadConfig(
 
 #### 以上是`TigerVideoPlayer`使用的简单说明，具体使用请参考Demo
 
-
+***********
 
 # TigerVideo
 基于多个开源库实现的一个视频播放App，练手项目
