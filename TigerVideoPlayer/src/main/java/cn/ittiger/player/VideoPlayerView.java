@@ -352,6 +352,7 @@ public class VideoPlayerView extends RelativeLayout implements
                 return;
             }
         }
+        ((Activity)getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestAudioFocus();
         //先移除播放器关联的TextureView
         PlayerManager.getInstance().removeTextureView();
@@ -554,6 +555,7 @@ public class VideoPlayerView extends RelativeLayout implements
                 resetDuration();
                 stopVideoProgressUpdate();
                 abandonAudioFocus();
+                ((Activity)getContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 break;
             case PlayState.STATE_LOADING:
                 Utils.log("state change to: STATE_LOADING");
