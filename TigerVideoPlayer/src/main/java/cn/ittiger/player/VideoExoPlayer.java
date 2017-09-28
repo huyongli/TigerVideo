@@ -165,23 +165,47 @@ public class VideoExoPlayer extends AbsSimplePlayer implements SimpleExoPlayer.V
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if(playbackState == ExoPlayer.STATE_ENDED) {//播放结束
-            if(mPlayCallback != null) {
-                mPlayCallback.onComplete();
-            }
+            onCompletion();
         } else if(playbackState == ExoPlayer.STATE_READY) {//准备播放
             if(getState() == PlayState.STATE_LOADING) {//加载视频
-                if(mPlayCallback != null) {
-                    mPlayCallback.onDurationChanged((int) mExoPlayer.getDuration());
-                    mPlayCallback.onPlayStateChanged(PlayState.STATE_PLAYING);
-                }
-                play();
+                onPrepared();
             } else if(getState() == PlayState.STATE_PLAYING_BUFFERING_START) {//seek to complete
-                if(mPlayCallback != null) {
-                    mPlayCallback.onPlayStateChanged(PlayState.STATE_PLAYING);
-                }
-                play();
+                onSeekComplete();
             }
         }
+    }
+
+    /**
+     * video prepared complete call back
+     */
+    public void onPrepared() {
+
+        if(mPlayCallback != null) {
+            mPlayCallback.onDurationChanged((int) mExoPlayer.getDuration());
+            mPlayCallback.onPlayStateChanged(PlayState.STATE_PLAYING);
+        }
+        play();
+    }
+
+    /**
+     * play complete call back
+     */
+    public void onCompletion() {
+
+        if(mPlayCallback != null) {
+            mPlayCallback.onComplete();
+        }
+    }
+
+    /**
+     * SeekTo  Complete callback
+     */
+    public void onSeekComplete() {
+
+        if(mPlayCallback != null) {
+            mPlayCallback.onPlayStateChanged(PlayState.STATE_PLAYING);
+        }
+        play();
     }
 
     @Override
