@@ -13,6 +13,10 @@ import android.view.TextureView;
 import cn.ittiger.player.state.PlayState;
 
 /**
+ * 继承此类时，如果想要获取当前正在播放的视频url，请用如下方式获取：
+ * {@link PlayerManager#getVideoUrl()}
+ * 因为此处的{@link #mUrl} 在开启缓存时是视频的缓存代理地址，不是用户播放视频时所传入的地址
+ *
  * @author: laohu on 2017/9/9
  * @site: http://ittiger.cn
  */
@@ -30,7 +34,7 @@ public class VideoMediaPlayer extends AbsSimplePlayer implements
     private HandlerThread mMediaHandlerThread;
     private MediaHandler mMediaHandler;
     protected int mState = PlayState.STATE_NORMAL;
-    protected String mUrl;
+    private String mUrl;
 
     public VideoMediaPlayer() {
 

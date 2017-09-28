@@ -44,6 +44,10 @@ import cn.ittiger.player.state.PlayState;
 import java.util.List;
 
 /**
+ * * 继承此类时，如果想要获取当前正在播放的视频url，请用如下方式获取：
+ * {@link PlayerManager#getVideoUrl()}
+ * 因为此处的{@link #mUrl} 在开启缓存时是视频的缓存代理地址，不是用户播放视频时所传入的地址
+ *
  * @author: laohu on 2017/9/9
  * @site: http://ittiger.cn
  */
@@ -57,7 +61,7 @@ public class VideoExoPlayer extends AbsSimplePlayer implements SimpleExoPlayer.V
     private MappingTrackSelector mTrackSelector;
     private EventLogger mEventLogger;
     private Handler mMainHandler;
-    protected String mUrl;
+    private String mUrl;
     protected int mState = PlayState.STATE_NORMAL;
 
     public VideoExoPlayer(Context context) {

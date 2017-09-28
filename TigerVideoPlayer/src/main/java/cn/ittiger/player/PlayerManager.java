@@ -118,6 +118,15 @@ public final class PlayerManager implements IPlayer.PlayCallback {
         return false;
     }
 
+    /**
+     * 获取正在播放的视频地址，必须在stop或release方法调用之前获取
+     * @return
+     */
+    public String getVideoUrl() {
+
+        return mVideoUrl;
+    }
+
     public void start(String url, int observerHash) {
 
         bindPlayerView(url, observerHash);
