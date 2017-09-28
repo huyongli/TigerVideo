@@ -26,11 +26,11 @@ public class VideoMediaPlayer extends AbsSimplePlayer implements
     private static final String TAG = "VideoMediaPlayer";
     private static final int MSG_PREPARE = 1;
     private static final int MSG_RELEASE = 2;
-    private MediaPlayer mMediaPlayer;
+    protected MediaPlayer mMediaPlayer;
     private HandlerThread mMediaHandlerThread;
     private MediaHandler mMediaHandler;
-    private int mState = PlayState.STATE_NORMAL;
-    private String mUrl;
+    protected int mState = PlayState.STATE_NORMAL;
+    protected String mUrl;
 
     public VideoMediaPlayer() {
 

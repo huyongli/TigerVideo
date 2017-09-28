@@ -545,7 +545,7 @@ public class VideoPlayerView extends RelativeLayout implements
      * 播放状态发生改变时调用
      * @param state
      */
-    private void onPlayStateChanged(int state) {
+    protected void onPlayStateChanged(int state) {
 
         mCurrentState = state;
         onChangeUIState(state);

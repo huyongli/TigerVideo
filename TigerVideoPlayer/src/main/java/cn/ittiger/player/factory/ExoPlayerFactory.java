@@ -12,7 +12,7 @@ import cn.ittiger.player.VideoExoPlayer;
  * @time: 17-9-13
  */
 public class ExoPlayerFactory implements IPlayerFactory {
-    private Context mContext;
+    protected Context mContext;
 
     public ExoPlayerFactory(Context context) {
 

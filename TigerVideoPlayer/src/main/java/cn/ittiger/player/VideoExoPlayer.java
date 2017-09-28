@@ -51,14 +51,14 @@ public class VideoExoPlayer extends AbsSimplePlayer implements SimpleExoPlayer.V
         TextRenderer.Output, ExoPlayer.EventListener {
     private static final String TAG = "VideoExoPlayer";
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
-    private Context mContext;
-    private SimpleExoPlayer mExoPlayer;
+    protected Context mContext;
+    protected SimpleExoPlayer mExoPlayer;
     private DataSource.Factory mMediaDataSourceFactory;
     private MappingTrackSelector mTrackSelector;
     private EventLogger mEventLogger;
     private Handler mMainHandler;
-    private String mUrl;
-    private int mState = PlayState.STATE_NORMAL;
+    protected String mUrl;
+    protected int mState = PlayState.STATE_NORMAL;
 
     public VideoExoPlayer(Context context) {
 
@@ -325,13 +325,13 @@ public class VideoExoPlayer extends AbsSimplePlayer implements SimpleExoPlayer.V
     }
 
 
-    DataSource.Factory buildDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
+    private DataSource.Factory buildDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
 
         return new DefaultDataSourceFactory(mContext, bandwidthMeter,
                 buildHttpDataSourceFactory(bandwidthMeter));
     }
 
-    HttpDataSource.Factory buildHttpDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
+    private HttpDataSource.Factory buildHttpDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
 
         return new DefaultHttpDataSourceFactory(Util.getUserAgent(mContext, TAG), bandwidthMeter);
     }
