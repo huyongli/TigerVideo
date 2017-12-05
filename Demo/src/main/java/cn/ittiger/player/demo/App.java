@@ -5,6 +5,7 @@ import android.app.Application;
 import cn.ittiger.player.Config;
 import cn.ittiger.player.PlayerManager;
 import cn.ittiger.player.factory.ExoPlayerFactory;
+import cn.ittiger.player.factory.MediaPlayerFactory;
 
 /**
  * @author: ylhu
@@ -22,7 +23,7 @@ public class App extends Application {
                 new Config.Builder(this)
                 .buildPlayerFactory(new ExoPlayerFactory(this))
                 .enableSmallWindowPlay()
-                .cache(true)
+                .cache(false)
                 .build()
         );
     }

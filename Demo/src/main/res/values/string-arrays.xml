@@ -4,6 +4,9 @@
         <item>http://flv3.bn.netease.com/videolib3/1709/13/CrqgX5261/SD/CrqgX5261-mobile.mp4</item>
         <item>http://flv3.bn.netease.com/videolib3/1709/15/XUeFJ9893/SD/XUeFJ9893-mobile.mp4</item>
         <item>http://flv3.bn.netease.com/videolib3/1709/16/BdXrp2108/SD/BdXrp2108-mobile.mp4</item>
+        <!--<item>https://api.47ks.com/config/getinfo.m3u8?pt=iqiyi105&amp;k=b106G7kwg2ZRznOrYzCUgCHOOQYUmTepm6gpmFmB%2FlPjTW4O%2FXPr0Yg</item>
+        <item>https://api.47ks.com/config/getinfo.m3u8?pt=iqiyi105&amp;k=b106G7kwg2ZRznOrYzCUgCHOOQYUmTepm6gpmFmB%2FlPjTW4O%2FXPr0Yg</item>
+        <item>https://api.47ks.com/config/getinfo.m3u8?pt=iqiyi105&amp;k=b106G7kwg2ZRznOrYzCUgCHOOQYUmTepm6gpmFmB%2FlPjTW4O%2FXPr0Yg</item>-->
     </string-array>
 
     <string-array name="video_cover">
