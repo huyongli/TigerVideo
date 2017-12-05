@@ -21,7 +21,7 @@
 
 ### Gradle
 ```
-compile 'cn.ittiger:TigerVideoPlayer:1.3'
+compile 'cn.ittiger:TigerVideoPlayer:1.5'
 ```
 
 ### 视频播放
