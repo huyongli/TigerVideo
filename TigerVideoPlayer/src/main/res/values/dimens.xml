@@ -29,4 +29,5 @@
     <dimen name="vp_fullscreen_seek_bar_margin">12dp</dimen>
     <dimen name="vp_fullscreen_seek_icon_margin_top">14dp</dimen>
     <dimen name="vp_fullscreen_seek_icon_margin_bottom">9dp</dimen>
+    <dimen name="vp_fullscreen_lock_margin">20dp</dimen>
 </resources>

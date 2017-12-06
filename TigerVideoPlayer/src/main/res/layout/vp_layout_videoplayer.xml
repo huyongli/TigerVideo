@@ -134,4 +134,14 @@
             android:maxLines="2"/>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/vp_fullscreen_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/vp_ic_fullscreen_unlocked"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/vp_fullscreen_lock_margin"
+        android:visibility="gone"/>
 </merge>

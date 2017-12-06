@@ -204,6 +204,10 @@ public final class PlayerManager implements IPlayer.PlayCallback {
         return mObserverHash != -1;
     }
 
+    /**
+     * 判断视频播放时是否需要自己处理返回键事件
+     * @return
+     */
     public boolean onBackPressed() {
 
         boolean consume = ScreenState.isNormal(mScreenState);
