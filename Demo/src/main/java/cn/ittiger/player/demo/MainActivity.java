@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.video_in_viewpager_fragment:
                 startActivity(new Intent(this, ViewPagerFragmentActivity.class));
                 break;
+            case R.id.full_screen_play:
+                startActivity(new Intent(this, FullScreenActivity.class));
+                break;
         }
     }
 
@@ -60,5 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         super.onDestroy();
         PlayerManager.getInstance().release();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(PlayerManager.getInstance().onBackPressed() == false) {
+            super.onBackPressed();
+        }
     }
 }

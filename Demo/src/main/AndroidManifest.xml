@@ -30,6 +30,9 @@
         <activity android:name=".ViewPagerFragmentActivity"
                   android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
+        <activity android:name=".FullScreenActivity"
+                  android:configChanges="orientation|screenSize|keyboardHidden">
+        </activity>
     </application>
 
 </manifest>

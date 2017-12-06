@@ -30,6 +30,14 @@
             android:layout_marginTop="@dimen/button_margin"
             android:text="Video in ViewPager And Fragment"
             android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/full_screen_play"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:text="Full Screen Play"
+            android:onClick="onClick"/>
     </LinearLayout>
 
 
