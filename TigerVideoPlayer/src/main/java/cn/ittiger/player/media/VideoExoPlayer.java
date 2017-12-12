@@ -1,4 +1,4 @@
-package cn.ittiger.player;
+package cn.ittiger.player.media;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -40,6 +40,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.TextureView;
 
+import cn.ittiger.player.PlayerManager;
 import cn.ittiger.player.state.PlayState;
 
 import java.util.List;

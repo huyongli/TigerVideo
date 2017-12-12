@@ -1,4 +1,4 @@
-package cn.ittiger.player;
+package cn.ittiger.player.media;
 
 import android.graphics.SurfaceTexture;
 import android.view.TextureView;

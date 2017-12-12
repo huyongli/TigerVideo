@@ -2,9 +2,9 @@ package cn.ittiger.player.factory;
 
 import android.content.Context;
 
-import cn.ittiger.player.AbsSimplePlayer;
+import cn.ittiger.player.media.AbsSimplePlayer;
 import cn.ittiger.player.util.Utils;
-import cn.ittiger.player.VideoExoPlayer;
+import cn.ittiger.player.media.VideoExoPlayer;
 
 /**
  * 创建基于ExoPlayer实现的播放器

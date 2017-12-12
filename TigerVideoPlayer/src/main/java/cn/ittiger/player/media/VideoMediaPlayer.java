@@ -1,4 +1,4 @@
-package cn.ittiger.player;
+package cn.ittiger.player.media;
 
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -10,6 +10,7 @@ import android.os.Message;
 import android.view.Surface;
 import android.view.TextureView;
 
+import cn.ittiger.player.PlayerManager;
 import cn.ittiger.player.state.PlayState;
 
 /**

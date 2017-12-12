@@ -1,4 +1,4 @@
-package cn.ittiger.player;
+package cn.ittiger.player.media;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;

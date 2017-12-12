@@ -12,8 +12,8 @@ import cn.ittiger.player.message.UIStateMessage;
 import cn.ittiger.player.state.PlayState;
 import cn.ittiger.player.state.ScreenState;
 import cn.ittiger.player.util.Utils;
-
-import com.danikula.videocache.HttpProxyCacheServer;
+import cn.ittiger.player.media.AbsSimplePlayer;
+import cn.ittiger.player.media.IPlayer;
 
 import java.util.Observable;
 import java.util.Observer;
