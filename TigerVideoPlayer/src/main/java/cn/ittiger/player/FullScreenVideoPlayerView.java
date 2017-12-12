@@ -60,7 +60,7 @@ public class FullScreenVideoPlayerView extends VideoPlayerView {
     private void fullScreenCanPlay() {
 
         forceFullScreen();
-        viewStubFullScreenGestureView();
+        initFullScreenGestureView();
         Utils.hideViewIfNeed(mVideoFullScreenView);
         Utils.hideViewIfNeed(mVideoFullScreenBackView);
         PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_FULLSCREEN);

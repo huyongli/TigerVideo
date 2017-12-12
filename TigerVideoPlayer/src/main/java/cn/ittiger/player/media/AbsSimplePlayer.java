@@ -73,4 +73,9 @@ public abstract class AbsSimplePlayer implements IPlayer, TextureView.SurfaceTex
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
     }
+
+    public TextureView getTextureView() {
+
+        return mTextureView;
+    }
 }

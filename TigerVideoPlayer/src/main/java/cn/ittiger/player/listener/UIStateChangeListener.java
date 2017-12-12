@@ -5,7 +5,7 @@ package cn.ittiger.player.listener;
  * @author: ylhu
  * @time: 2017/12/12
  */
-interface UIStateChangeListener {
+public interface UIStateChangeListener {
 
     /**
      * UI状态更新为Normal状态，即初始状态

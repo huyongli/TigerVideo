@@ -87,12 +87,12 @@ public final class PlayerManager implements IPlayer.PlayCallback {
 
     public void removeTextureView() {
 
-        if(mPlayer.mTextureView != null &&
-            mPlayer.mTextureView.getParent() != null) {
-            ((ViewGroup)mPlayer.mTextureView.getParent()).removeView(mPlayer.mTextureView);
+        if(mPlayer.getTextureView() != null &&
+            mPlayer.getTextureView().getParent() != null) {
+            ((ViewGroup)mPlayer.getTextureView().getParent()).removeView(mPlayer.getTextureView());
             setTextureView(null);
-            if(mPlayer.mTextureView != null) {
-                Utils.log("remove TextureView:" + mPlayer.mTextureView.toString());
+            if(mPlayer.getTextureView() != null) {
+                Utils.log("remove TextureView:" + mPlayer.getTextureView().toString());
             }
         }
     }
