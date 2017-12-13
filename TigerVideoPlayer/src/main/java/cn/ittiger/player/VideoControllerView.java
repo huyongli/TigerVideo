@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import cn.ittiger.player.listener.FullScreenToggleListener;
 import cn.ittiger.player.listener.UIStateChangeListener;
 
 /**
+ * 底部播放控制视图
  * @author: ylhu
  * @time: 2017/12/12
  */
@@ -33,6 +35,8 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
      * 底部 全屏播放按钮
      */
     protected ImageView mVideoFullScreenView;
+
+    private FullScreenToggleListener mFullScreenToggleListener;
 
     public VideoControllerView(Context context) {
 
@@ -81,7 +85,7 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
 
     protected int getControllerViewLayoutResId() {
 
-        return R.layout.vp_layout_videoplayer_bottom_controller;
+        return R.layout.vp_layout_bottom_controller;
     }
 
     @Override
@@ -117,5 +121,10 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
     @Override
     public void onChangeUIErrorState(int screenState) {
 
+    }
+
+    public void setFullScreenToggleListener(FullScreenToggleListener fullScreenToggleListener) {
+
+        mFullScreenToggleListener = fullScreenToggleListener;
     }
 }

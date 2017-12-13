@@ -10,16 +10,8 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
-    <!-- 视频预览图 -->
-    <ImageView
-        android:id="@+id/vp_video_thumb"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:scaleType="fitCenter"/>
-
     <!-- 底部控制条View -->
-    <include layout="@layout/vp_layout_videoplayer_bottom_controller"/>
+    <include layout="@layout/vp_layout_bottom_controller"/>
 
     <!-- 底部控制条不显示的时候显示进度的progressbar -->
     <ProgressBar

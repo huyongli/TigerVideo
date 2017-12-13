@@ -1,8 +1,11 @@
 package cn.ittiger.player.demo;
 
 import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_main);
         mPlayerView = (VideoPlayerView) findViewById(R.id.video_player_view);
 
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         VideoBean videoBean = VideoData.getVideo();
         mPlayerView.bind(videoBean.getVideoUrl(), videoBean.getVideoTitle());
         mPlayerView.getThumbImageView().setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(this).load(videoBean.getVideoThumbUrl()).into(mPlayerView.getThumbImageView());
+        ((SimpleDraweeView)mPlayerView.getThumbImageView()).setImageURI(Uri.parse(videoBean.getVideoThumbUrl()));
     }
 
     public void onClick(View view) {

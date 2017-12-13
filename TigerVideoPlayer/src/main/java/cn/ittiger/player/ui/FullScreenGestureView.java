@@ -158,7 +158,7 @@ public class FullScreenGestureView extends FrameLayout implements FullScreenGest
         inflate(context, getFullScreenGestureViewLayoutResId(), this);
         mScreenWidth = Utils.getWindowWidth(context);
         mScreenHeight = Utils.getWindowHeight(context);
-        initView();
+        initWidgetView();
         initFullScreenGestureParams();
     }
 
@@ -167,7 +167,7 @@ public class FullScreenGestureView extends FrameLayout implements FullScreenGest
         return R.layout.vp_fullscreen_gesture_view;
     }
 
-    protected void initView() {
+    protected void initWidgetView() {
 
         mVideoVolumeView = (LinearLayout) findViewById(R.id.vp_video_volume);
         mVideoVolumeProgress = (ProgressBar) findViewById(R.id.vp_video_volume_progressbar);
@@ -277,9 +277,11 @@ public class FullScreenGestureView extends FrameLayout implements FullScreenGest
     /**
      * 调整视频音量大小
      *
+     * 重写此方法可以改变音量的改变速率
+     *
      * @param isTurnUp    是否调大音量
      */
-    private void changeVideoVolume(boolean isTurnUp) {
+    protected void changeVideoVolume(boolean isTurnUp) {
 
         mCurrentGestureState = GestureTouchState.STATE_VOLUME;
         int volume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -305,9 +307,11 @@ public class FullScreenGestureView extends FrameLayout implements FullScreenGest
     /**
      * 调整屏幕亮度
      *
+     * 重写此方法可以改变亮度的变化速率
+     *
      * @param isDodge  是否调亮
      */
-    private void changeBrightness(boolean isDodge) {
+    protected void changeBrightness(boolean isDodge) {
 
         mCurrentGestureState = GestureTouchState.STATE_BRIGHTNESS;
         WindowManager.LayoutParams mWindowAttr = ((Activity)getContext()).getWindow().getAttributes();
@@ -335,9 +339,11 @@ public class FullScreenGestureView extends FrameLayout implements FullScreenGest
 
     /**
      * 视频前进后退
+     *
+     * 重写此方法可以改变前进后退的速率
      * @param isForward
      */
-    private void videoSeek(boolean isForward) {
+    protected void videoSeek(boolean isForward) {
 
         mCurrentGestureState = GestureTouchState.STATE_VIDEO_PROGRESS;
         int step = VIDEO_SEEK_STEP;//每次前进后退1秒

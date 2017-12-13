@@ -37,6 +37,7 @@ import cn.ittiger.player.ui.FullScreenGestureView;
 import cn.ittiger.player.util.Utils;
 import cn.ittiger.player.util.ViewIndex;
 
+import java.lang.reflect.Constructor;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -58,14 +59,33 @@ public class VideoPlayerView extends RelativeLayout implements
     FullScreenGestureStateListener,
     AudioManager.OnAudioFocusChangeListener,
     Observer {
+
     /**
      * 视频显示媒介容器(TextureView的父容器)
      */
     protected FrameLayout mVideoTextureViewContainer;
+
     /**
      * 视频预览图
      */
     protected ImageView mVideoThumbView;
+    /**
+     * 自定义视频预览图视图的layout id
+     * 必须是{@link ImageView} 子类
+     */
+    private int mVideoThumbViewRes = -1;
+
+    /**
+     * 全屏播放时的自定义手势操作视图layout id
+     * 自定义时必须继承{@link FullScreenGestureView}
+     */
+    private int mFullScreenGestureViewRes = -1;
+    /**
+     * 全屏播放时的手势操作视图
+     */
+    private FullScreenGestureView mFullScreenGestureView;
+
+
     /**
      * 底部显示播放进度的进度条
      */
@@ -124,14 +144,6 @@ public class VideoPlayerView extends RelativeLayout implements
      */
     protected ImageView mVideoFullScreenLockView;
 
-    /**
-     * 全屏播放时的手势操作视图资源id
-     */
-    private int mFullScreenGestureViewResId = 0;
-    /**
-     * 全屏播放时的手势操作视图
-     */
-    private FullScreenGestureView mFullScreenGestureView;
 
     /**
      * 播放时底部控制条自动隐藏任务
@@ -226,7 +238,7 @@ public class VideoPlayerView extends RelativeLayout implements
     private void initView(Context context, AttributeSet attrs) {
 
         if(attrs != null) {
-            initAttributes(context, attrs);
+            initCustomViewAttributes(context, attrs);
         }
 
         mViewHash = this.toString().hashCode();
@@ -240,19 +252,14 @@ public class VideoPlayerView extends RelativeLayout implements
         setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
         setBackgroundColor(Color.BLACK);
 
+        initVideoThumbView();
+
         findAndBindView();
-    }
-
-    private void initAttributes(Context context, AttributeSet attributeSet) {
-
-        TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.VideoPlayerView, 0, 0);
-        mFullScreenGestureViewResId = attr.getResourceId(R.styleable.VideoPlayerView_vpFullScreenGestureView, 0);
     }
 
     protected void findAndBindView() {
 
         mVideoTextureViewContainer = (FrameLayout) findViewById(R.id.vp_video_surface_container);
-        mVideoThumbView = (ImageView) findViewById(R.id.vp_video_thumb);
         mBottomProgressBar = (ProgressBar) findViewById(R.id.vp_video_bottom_progress);
         mVideoLoadingBar = (ProgressBar) findViewById(R.id.vp_video_loading);
         mVideoPlayView = (ImageView) findViewById(R.id.vp_video_play);
@@ -284,17 +291,52 @@ public class VideoPlayerView extends RelativeLayout implements
     }
 
     /**
+     * 初始化自定义视图的相关参数信息
+     * @param context
+     * @param attributeSet
+     */
+    private void initCustomViewAttributes(Context context, AttributeSet attributeSet) {
+
+        TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.VideoPlayerView, 0, 0);
+
+        mFullScreenGestureViewRes = attr.getResourceId(R.styleable.VideoPlayerView_vpFullScreenGestureViewLayoutRes, -1);
+        mVideoThumbViewRes = attr.getResourceId(R.styleable.VideoPlayerView_vpVideoThumbViewLayoutRes, -1);
+
+        attr.recycle();
+    }
+
+    /**
+     * 初始化视频预览图视图
+     */
+    protected void initVideoThumbView() {
+
+        if(mVideoThumbView != null) {
+            return;
+        }
+        if(mVideoThumbViewRes == -1) {
+            mVideoThumbView = new ImageView(getContext());
+            mVideoThumbView.setBackgroundResource(android.R.color.black);
+            mVideoThumbView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        } else {
+            mVideoThumbView = (ImageView) inflate(getContext(), mVideoThumbViewRes, null);
+        }
+        RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this.addView(mVideoThumbView, ViewIndex.VIDEO_THUMB_VIEW_INDEX, params);
+    }
+
+    /**
      * 初始化全屏播放手势操作视图
      */
     protected void initFullScreenGestureView() {
 
         if(mFullScreenGestureView == null) {
-            if(mFullScreenGestureViewResId == 0) {
-                mFullScreenGestureView = new FullScreenGestureView(getContext());
+            if(mFullScreenGestureViewRes != -1) {
+                mFullScreenGestureView = (FullScreenGestureView) inflate(getContext(), mFullScreenGestureViewRes, null);
             } else {
-                mFullScreenGestureView = (FullScreenGestureView) inflate(getContext(), mFullScreenGestureViewResId, null);
+                mFullScreenGestureView = new FullScreenGestureView(getContext());
             }
-            this.addView(mFullScreenGestureView, ViewIndex.FULLSCREEN_GESTURE_VIEW_INDEX);
+            RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            this.addView(mFullScreenGestureView, ViewIndex.FULLSCREEN_GESTURE_VIEW_INDEX, params);
         }
     }
 
@@ -348,7 +390,9 @@ public class VideoPlayerView extends RelativeLayout implements
         }
         int state = PlayerManager.getInstance().getState();
 
-        if (R.id.vp_video_play == id) {
+        if(v == mVideoThumbView) {
+            startPlayVideo();
+        } else if (R.id.vp_video_play == id) {
             if(TextUtils.isEmpty(mVideoUrl)) {
                 Toast.makeText(getContext(), R.string.vp_no_url, Toast.LENGTH_SHORT).show();
                 return;
@@ -369,8 +413,6 @@ public class VideoPlayerView extends RelativeLayout implements
                     PlayerManager.getInstance().play();
                     break;
             }
-        } else if(R.id.vp_video_thumb == id) {
-            startPlayVideo();
         } else if(R.id.vp_video_fullscreen == id) {
             //全屏播放
             toggleFullScreen();
