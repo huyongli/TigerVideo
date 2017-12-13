@@ -3,5 +3,6 @@
     <declare-styleable name="VideoPlayerView">
         <attr name="vpFullScreenGestureViewLayoutRes" format="reference"/>
         <attr name="vpVideoThumbViewLayoutRes" format="reference"/>
+        <attr name="vpVideoControllerViewLayoutRes" format="reference"/>
     </declare-styleable>
 </resources>

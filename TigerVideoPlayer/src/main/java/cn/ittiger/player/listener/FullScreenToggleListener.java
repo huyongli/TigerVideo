@@ -7,7 +7,8 @@ package cn.ittiger.player.listener;
  */
 public interface FullScreenToggleListener {
 
-    void onStartFullScreen();
-
-    void onExitFullScreen();
+    /**
+     * 全屏与非全屏切换
+     */
+    void onToggleFullScreen();
 }

@@ -5,20 +5,38 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import cn.ittiger.player.listener.FullScreenToggleListener;
 import cn.ittiger.player.listener.UIStateChangeListener;
+import cn.ittiger.player.listener.VideoControllerViewListener;
+import cn.ittiger.player.state.ScreenState;
+import cn.ittiger.player.util.Utils;
 
 /**
  * 底部播放控制视图
  * @author: ylhu
  * @time: 2017/12/12
  */
-public class VideoControllerView extends LinearLayout implements UIStateChangeListener {
+public class VideoControllerView extends RelativeLayout implements
+        UIStateChangeListener,
+        View.OnClickListener,
+        VideoControllerViewListener,
+        SeekBar.OnSeekBarChangeListener {
+    private static final int PROGRESS_UPDATE_INTERNAL = 300;
+    private static final int PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
+    protected View mVideoControllerIntenerlView;
     /**
      * 底部 视频当前播放时间
      */
@@ -35,7 +53,23 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
      * 底部 全屏播放按钮
      */
     protected ImageView mVideoFullScreenView;
+    /**
+     * 控制条不显示后，显示播放进度的进度条(不可点击)
+     */
+    protected ProgressBar mBottomProgressBar;
 
+
+    /**
+     * 视频时长，miliseconds
+     */
+    private int mDuration = 0;
+
+    private final ScheduledExecutorService mExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> mScheduleFuture;
+
+    /**
+     * 全屏与非全屏切换操作监听
+     */
     private FullScreenToggleListener mFullScreenToggleListener;
 
     public VideoControllerView(Context context) {
@@ -67,8 +101,6 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
 
         inflate(context, getControllerViewLayoutResId(), this);
         setVisibility(GONE);
-        setOrientation(HORIZONTAL);
-
         initWidgetView();
     }
 
@@ -77,10 +109,15 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
      */
     protected void initWidgetView() {
 
+        mVideoControllerIntenerlView = findViewById(R.id.vp_video_bottom_controller_view);
         mVideoPlayTimeView = (TextView) findViewById(R.id.vp_video_play_time);
         mVideoTotalTimeView = (TextView) findViewById(R.id.vp_video_total_time);
         mVideoPlaySeekBar = (SeekBar) findViewById(R.id.vp_video_seek_progress);
         mVideoFullScreenView = (ImageView) findViewById(R.id.vp_video_fullscreen);
+        mBottomProgressBar = (ProgressBar) findViewById(R.id.vp_video_bottom_progress);
+
+        mVideoFullScreenView.setOnClickListener(this);
+        mVideoPlaySeekBar.setOnSeekBarChangeListener(this);
     }
 
     protected int getControllerViewLayoutResId() {
@@ -88,43 +125,187 @@ public class VideoControllerView extends LinearLayout implements UIStateChangeLi
         return R.layout.vp_layout_bottom_controller;
     }
 
+    /**
+     * 全屏播放按钮点击事件
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+
+        if(mFullScreenToggleListener != null) {
+            mFullScreenToggleListener.onToggleFullScreen();
+        }
+    }
+
+    /************************ 底部SeekBar监听 ********************************/
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        if(fromUser) {
+            int seekToTime = seekBar.getProgress() * mDuration / 100;
+            PlayerManager.getInstance().seekTo(seekToTime);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+    /************************ 结束底部SeekBar监听 ********************************/
+
     @Override
     public void onChangeUINormalState(int screenState) {
 
+        Utils.hideViewIfNeed(this);
+        //隐藏播放控制条
+        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
     }
 
     @Override
     public void onChangeUILoadingState(int screenState) {
 
+        Utils.hideViewIfNeed(this);
+        //隐藏播放控制条
+        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
     }
 
     @Override
     public void onChangeUIPlayingState(int screenState) {
 
+        Utils.showViewIfNeed(this);
+        if(ScreenState.isSmallWindow(screenState)) {
+            //隐藏播放控制条
+            Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+            //显示底部播放进度
+            Utils.showViewIfNeed(mBottomProgressBar);
+        } else {
+            //显示播放控制条
+            Utils.showViewIfNeed(mVideoControllerIntenerlView);
+            //隐藏底部播放进度
+            Utils.hideViewIfNeed(mBottomProgressBar);
+        }
     }
 
     @Override
     public void onChangeUIPauseState(int screenState) {
 
+        Utils.showViewIfNeed(this);
+        //显示播放控制条
+        Utils.showViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
     }
 
     @Override
     public void onChangeUISeekBufferingState(int screenState) {
 
+        Utils.showViewIfNeed(this);
+        if(ScreenState.isSmallWindow(screenState)) {
+            //隐藏播放控制条
+            Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+            //显示底部播放进度
+            Utils.showViewIfNeed(mBottomProgressBar);
+        } else {
+            //显示播放控制条
+            Utils.showViewIfNeed(mVideoControllerIntenerlView);
+            //隐藏底部播放进度
+            Utils.hideViewIfNeed(mBottomProgressBar);
+        }
     }
 
     @Override
     public void onChangeUICompleteState(int screenState) {
 
+        Utils.hideViewIfNeed(this);
+        //隐藏播放控制条
+        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
+        updateProgress(mDuration);
     }
 
     @Override
     public void onChangeUIErrorState(int screenState) {
 
+        Utils.hideViewIfNeed(this);
+        //隐藏播放控制条
+        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
+    }
+
+    @Override
+    public void onVideoDurationChanged(int duration) {
+
+        mDuration = duration;
+        String time = Utils.formatVideoTimeLength(duration);
+        mVideoTotalTimeView.setText(time);
+    }
+
+    /**
+     * 开始更新播放进度
+     */
+    @Override
+    public void startVideoProgressUpdate() {
+
+        stopVideoProgressUpdate();
+        if (!mExecutorService.isShutdown()) {
+            mScheduleFuture = mExecutorService.scheduleAtFixedRate(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+
+                            post(mUpdateProgressTask);
+                        }
+                    }, PROGRESS_UPDATE_INITIAL_INTERVAL,
+                    PROGRESS_UPDATE_INTERNAL, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    /**
+     * 停止更新播放进度
+     */
+    @Override
+    public void stopVideoProgressUpdate() {
+
+        if (mScheduleFuture != null) {
+            mScheduleFuture.cancel(false);
+        }
+    }
+
+    private final Runnable mUpdateProgressTask = new Runnable() {
+        @Override
+        public void run() {
+
+            int position = PlayerManager.getInstance().getCurrentPosition();
+            updateProgress(position);
+        }
+    };
+
+    private void updateProgress(int position) {
+
+        int progress = position * 100 / (mDuration == 0 ? 1 : mDuration);
+        mVideoPlayTimeView.setText(Utils.formatVideoTimeLength(position));
+        mVideoPlaySeekBar.setProgress(progress);
+        mBottomProgressBar.setProgress(progress);
     }
 
     public void setFullScreenToggleListener(FullScreenToggleListener fullScreenToggleListener) {
 
         mFullScreenToggleListener = fullScreenToggleListener;
+    }
+
+    public int getDuration() {
+
+        return mDuration;
     }
 }
