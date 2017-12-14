@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import cn.ittiger.player.listener.FullScreenGestureStateListener;
 import cn.ittiger.player.listener.FullScreenToggleListener;
+import cn.ittiger.player.listener.VideoTouchListener;
 import cn.ittiger.player.message.BackPressedMessage;
 import cn.ittiger.player.message.DurationMessage;
 import cn.ittiger.player.message.Message;
@@ -56,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 public class VideoPlayerView extends RelativeLayout implements
     View.OnClickListener,
     View.OnTouchListener,
+    VideoTouchListener,
     FullScreenGestureStateListener,
     FullScreenToggleListener,
     AudioManager.OnAudioFocusChangeListener,
@@ -314,6 +316,7 @@ public class VideoPlayerView extends RelativeLayout implements
         } else {
             mVideoControllerView = (VideoControllerView) inflate(getContext(), mVideoControllerViewRes, null);
         }
+        mVideoControllerView.setFullScreenToggleListener(this);
         RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.addView(mVideoControllerView, ViewIndex.VIDEO_CONTROLLER_VIEW_INDEX, params);
     }
@@ -437,11 +440,11 @@ public class VideoPlayerView extends RelativeLayout implements
         mFullScreenLocked = locked;
         if(mFullScreenLocked) {
             mVideoFullScreenLockView.setImageResource(R.drawable.vp_ic_fullscreen_lock);
-            hideAllPlayControlViewExcludeLockView();
+            hideAllPlayStateViewExcludeLockView();
             startDismissControllerViewTimer();
         } else {
             mVideoFullScreenLockView.setImageResource(R.drawable.vp_ic_fullscreen_unlocked);
-            showAllPlayControlView();
+            showAllPlayStateView();
         }
     }
 
@@ -874,46 +877,46 @@ public class VideoPlayerView extends RelativeLayout implements
         }
         boolean isAllShown = Utils.isViewShown(mVideoPlayView) && Utils.isViewShown(mVideoControllerView);
         if(isAllShown) {
-            hideAllPlayControlView();
+            hideAllPlayStateView();
         } else {
-            showAllPlayControlView();
+            showAllPlayStateView();
         }
     }
 
     /**
      * 隐藏所有的播放控制视图
      */
-    private void hideAllPlayControlView() {
+    @Override
+    public void hideAllPlayStateView() {
 
         Utils.hideViewIfNeed(mVideoFullScreenLockView);
-        hideAllPlayControlViewExcludeLockView();
-    }
-
-    /**
-     * 隐藏所有的播放控制视图（除了全屏播放时的锁屏按钮之外）
-     */
-    private void hideAllPlayControlViewExcludeLockView() {
-
-        Utils.hideViewIfNeed(mVideoPlayView);
-        Utils.hideViewIfNeed(mVideoControllerView);
-        Utils.showViewIfNeed(mBottomProgressBar);
-        onChangeVideoHeaderViewState(false);
-        cancelDismissControllerViewTimer();
+        hideAllPlayStateViewExcludeLockView();
     }
 
     /**
      * 显示所有的播放控制视图(播放状态下)
      */
-    private void showAllPlayControlView() {
+    @Override
+    public void showAllPlayStateView() {
 
         showFullScreenLockView();
         startDismissControllerViewTimer();
         if(mFullScreenLocked == false) {
             Utils.showViewIfNeed(mVideoPlayView);
-            Utils.showViewIfNeed(mVideoControllerView);
-            Utils.hideViewIfNeed(mBottomProgressBar);
+            mVideoControllerView.showAllPlayStateView();
             onChangeVideoHeaderViewState(true);
         }
+    }
+
+    /**
+     * 隐藏所有的播放控制视图（除了全屏播放时的锁屏按钮之外）
+     */
+    public void hideAllPlayStateViewExcludeLockView() {
+
+        Utils.hideViewIfNeed(mVideoPlayView);
+        mVideoControllerView.hideAllPlayStateView();
+        onChangeVideoHeaderViewState(false);
+        cancelDismissControllerViewTimer();
     }
 
     /**
@@ -970,7 +973,7 @@ public class VideoPlayerView extends RelativeLayout implements
                         @Override
                         public void run() {
 
-                            hideAllPlayControlView();
+                            hideAllPlayStateView();
                         }
                     });
                 }
@@ -1334,12 +1337,12 @@ public class VideoPlayerView extends RelativeLayout implements
     @Override
     public void onFullScreenGestureStart() {
 
-        hideAllPlayControlView();
+        hideAllPlayStateView();
     }
 
     @Override
     public void onFullScreenGestureFinish() {
 
-        showAllPlayControlView();
+        showAllPlayStateView();
     }
 }

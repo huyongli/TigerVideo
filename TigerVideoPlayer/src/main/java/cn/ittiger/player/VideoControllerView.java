@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import cn.ittiger.player.listener.FullScreenToggleListener;
 import cn.ittiger.player.listener.UIStateChangeListener;
 import cn.ittiger.player.listener.VideoControllerViewListener;
+import cn.ittiger.player.listener.VideoTouchListener;
 import cn.ittiger.player.state.ScreenState;
 import cn.ittiger.player.util.Utils;
 
@@ -33,6 +34,7 @@ public class VideoControllerView extends RelativeLayout implements
         UIStateChangeListener,
         View.OnClickListener,
         VideoControllerViewListener,
+        VideoTouchListener,
         SeekBar.OnSeekBarChangeListener {
     private static final int PROGRESS_UPDATE_INTERNAL = 300;
     private static final int PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
@@ -241,6 +243,26 @@ public class VideoControllerView extends RelativeLayout implements
         Utils.hideViewIfNeed(mVideoControllerIntenerlView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
+    }
+
+    @Override
+    public void showAllPlayStateView() {
+
+        Utils.showViewIfNeed(this);
+        //显示播放控制条
+        Utils.showViewIfNeed(mVideoControllerIntenerlView);
+        //隐藏底部播放进度
+        Utils.hideViewIfNeed(mBottomProgressBar);
+    }
+
+    @Override
+    public void hideAllPlayStateView() {
+
+        Utils.showViewIfNeed(this);
+        //隐藏播放控制条
+        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        //显示底部播放进度
+        Utils.showViewIfNeed(mBottomProgressBar);
     }
 
     @Override
