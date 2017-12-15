@@ -17,6 +17,7 @@
 8. 使用`AndroidVideoCache`实现视频缓存功能，该功能默认关闭，使用配置即可打开该缓存功能
 9. 因视频播放内核与视频操作界面充分解耦，因此完全支持自定义自己喜欢的播放内核来实现视频播放
 10. 该库实现了基于`MediaPlayer`和`ExoPlayer`两个内核的视频播放器，可以根据自己的需求配置。因为`ExoPlayer`需要`Context`，所以该库默认使用`MediaPlayer`内核播放器播放
+11.支持自定义头部Title显示相关视图，支持自定义底部播放控制条视图，支持自定义全屏播放时手势操作相关显示视图，支持替换预览图ImageView，支持自定义加载失败显示视图
 
 # TigerVideoPlayer的使用
 该库实现了一行代码实现视频播放，一行代码开启小窗口播放，使用简单。
@@ -47,6 +48,24 @@ mVideoPlayerView.bind(video.getVideoUrl(), video.getVideoTitle());
 //显示视频预览图
 Glide.with(mContext).load(video.getVideoThumbUrl()).into(holder.mPlayerView.getThumbImageView());
 ```
+
+### 自定义播放器相关视图
+```
+<cn.ittiger.player.VideoPlayerView
+        android:id="@+id/video_player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:vpFullScreenGestureViewLayoutRes="@layout/my_fullscreen_gesture_view"
+        app:vpVideoThumbViewLayoutRes="@layout/fresco_image_view"
+        .../>
+```
+如上代码所示，如果要自定义全屏手势操作相关View，只需要在布局中添加自定义属性`app:vpFullScreenGestureViewLayoutRes`即可
+1.自定义布局my_fullscreen_gesture_view的根视图必须继承自FullScreenGestureView
+2.自定义底部播放控制条View时，必须继承自VideoControllerView
+3.自定义视频缩略图，必须继承自ImageView
+4.自定义加载失败View，不需要继承任何View
+5.自定义头部View时，必须继承自VideoHeaderView
+
 
 ### 自定义播放配置
 ```
