@@ -4,5 +4,7 @@
         <attr name="vpFullScreenGestureViewLayoutRes" format="reference"/>
         <attr name="vpVideoThumbViewLayoutRes" format="reference"/>
         <attr name="vpVideoControllerViewLayoutRes" format="reference"/>
+        <attr name="vpVideoErrorViewLayoutRes" format="reference"/>
+        <attr name="vpVideoHeaderViewLayoutRes" format="reference"/>
     </declare-styleable>
 </resources>

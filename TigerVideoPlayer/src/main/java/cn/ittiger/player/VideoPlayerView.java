@@ -4,161 +4,46 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.ittiger.player.listener.FullScreenGestureStateListener;
-import cn.ittiger.player.listener.FullScreenToggleListener;
-import cn.ittiger.player.listener.VideoTouchListener;
 import cn.ittiger.player.message.BackPressedMessage;
 import cn.ittiger.player.message.DurationMessage;
 import cn.ittiger.player.message.Message;
 import cn.ittiger.player.message.UIStateMessage;
 import cn.ittiger.player.state.PlayState;
 import cn.ittiger.player.state.ScreenState;
-import cn.ittiger.player.ui.FullScreenGestureView;
+import cn.ittiger.player.ui.StandardVideoView;
 import cn.ittiger.player.util.Utils;
-import cn.ittiger.player.util.ViewIndex;
 
-import java.lang.reflect.Constructor;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
- * 播放器视图，只起到展示视频的作用，视频播放的真正控制交由{@link PlayerManager}实现
+ * 播放器，主要处理视频的播放暂停，全屏播放切换，小窗口播放切换等逻辑
+ *
+ * 视频播放的真正控制交由{@link PlayerManager}实现
  * @author: ylhu
  * @time: 17-9-8
  */
-public class VideoPlayerView extends RelativeLayout implements
-    View.OnClickListener,
-    View.OnTouchListener,
-    VideoTouchListener,
-    FullScreenGestureStateListener,
-    FullScreenToggleListener,
+public class VideoPlayerView extends StandardVideoView implements
     AudioManager.OnAudioFocusChangeListener,
     Observer {
-
-    /**
-     * 视频显示媒介容器(TextureView的父容器)
-     */
-    protected FrameLayout mVideoTextureViewContainer;
-
-    /**
-     * 底部播放控制条
-     */
-    protected VideoControllerView mVideoControllerView;
-    /**
-     * 自定义底部播放控制台视图layout id
-     * 必须继承{@link VideoControllerView}
-     */
-    private int mVideoControllerViewRes = -1;
-
-    /**
-     * 视频预览图
-     */
-    protected ImageView mVideoThumbView;
-    /**
-     * 自定义视频预览图视图的layout id
-     * 必须是{@link ImageView} 子类
-     */
-    private int mVideoThumbViewRes = -1;
-
-    /**
-     * 全屏播放时的自定义手势操作视图layout id
-     * 自定义时必须继承{@link FullScreenGestureView}
-     */
-    private int mFullScreenGestureViewRes = -1;
-    /**
-     * 全屏播放时的手势操作视图
-     */
-    private FullScreenGestureView mFullScreenGestureView;
-
-
-    /**
-     * 视频加载进度
-     */
-    protected ProgressBar mVideoLoadingBar;
-    /**
-     * 视频播放按钮
-     */
-    protected ImageView mVideoPlayView;
-    /**
-     * 视频加载失败的提示View
-     */
-    protected View mVideoErrorView;
-
-
-    /**
-     * 小窗口播放时的关闭按钮
-     */
-    protected ImageView mVideoSmallWindowBackView;
-    /**
-     * 视频顶部显示全屏播放返回按钮和视频标题的父容器
-     */
-    protected View mVideoHeaderViewContainer;
-    /**
-     * 全屏播放时的返回按钮
-     */
-    protected ImageView mVideoFullScreenBackView;
-    /**
-     * 视频标题
-     */
-    protected TextView mVideoTitleView;
-    /**
-     * 全屏播放时锁屏按钮
-     */
-    protected ImageView mVideoFullScreenLockView;
-
-
-    /**
-     * 播放时底部控制条自动隐藏任务
-     */
-    protected DismissControllerViewTimerTask mDismissControllerViewTimerTask;
-    /**
-     * 播放时底部控制条自动隐藏触发器
-     */
-    protected Timer mDismissControllerViewTimer;
-    /**
-     * 播放时底部控制条自动隐藏间隔时间
-     */
-    protected int mAutoDismissTime = 2000;
     /**
      * 当前Observer（即：VideoPlayerView本身）对象的hashcode
      */
     private int mViewHash;
-    /**
-     * 视频标题
-     */
-    private CharSequence mVideoTitle;
-    /**
-     * 视频地址
-     */
-    private String mVideoUrl;
     /**
      * 当前播放状态
      */
@@ -166,15 +51,11 @@ public class VideoPlayerView extends RelativeLayout implements
     /**
      * 当前屏幕播放状态
      */
-    protected int mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL;
+    private int mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL;
     /**
      * 屏幕宽度
      */
     private int mScreenWidth;
-    /**
-     * 屏幕高度
-     */
-    private int mScreenHeight;
     /**
      * 小窗口的宽度
      */
@@ -183,14 +64,6 @@ public class VideoPlayerView extends RelativeLayout implements
      * 小窗口的高度
      */
     private int mSmallWindowHeight;
-    /**
-     * 正常状态下的标题是否显示
-     */
-    private boolean mShowNormalStateTitleView = true;
-    /**
-     * 全屏播放时，是否已经锁屏不允许操作
-     */
-    protected boolean mFullScreenLocked = false;
 
     public VideoPlayerView(Context context) {
 
@@ -200,179 +73,64 @@ public class VideoPlayerView extends RelativeLayout implements
     public VideoPlayerView(Context context, AttributeSet attrs) {
 
         super(context, attrs);
-        initView(context, attrs);
     }
 
     public VideoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
 
         super(context, attrs, defStyleAttr);
-        initView(context, attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public VideoPlayerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context, attrs);
     }
 
-    protected int getPlayerLayoutId() {
+    @Override
+    protected void initView(Context context, AttributeSet attrs) {
 
-        return R.layout.vp_layout_videoplayer;
-    }
-
-    private void initView(Context context, AttributeSet attrs) {
-
-        if(attrs != null) {
-            initCustomViewAttributes(context, attrs);
-        }
+        super.initView(context, attrs);
 
         mViewHash = this.toString().hashCode();
         mScreenWidth = Utils.getWindowWidth(context);
-        mScreenHeight = Utils.getWindowHeight(context);
         mSmallWindowWidth = mScreenWidth / 2;
         mSmallWindowHeight = (int) (mSmallWindowWidth * 1.0f / 16 * 9 + 0.5f);
-
-        inflate(context, getPlayerLayoutId(), this);
-        //避免ListView中item点击无法响应的问题
-        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
-        setBackgroundColor(Color.BLACK);
-
-        initVideoThumbView();
-        initVideoControllerView();
-
-        findAndBindView();
-    }
-
-    protected void findAndBindView() {
-
-        mVideoTextureViewContainer = (FrameLayout) findViewById(R.id.vp_video_surface_container);
-        mVideoLoadingBar = (ProgressBar) findViewById(R.id.vp_video_loading);
-        mVideoPlayView = (ImageView) findViewById(R.id.vp_video_play);
-        mVideoErrorView = findViewById(R.id.vp_video_play_error_view);
-        mVideoSmallWindowBackView = (ImageView) findViewById(R.id.vp_video_small_window_back);
-        mVideoHeaderViewContainer = findViewById(R.id.vp_video_header_view);
-        mVideoFullScreenBackView = (ImageView) findViewById(R.id.vp_video_fullScreen_back);
-        mVideoTitleView = (TextView) findViewById(R.id.vp_video_title);
-        mVideoFullScreenLockView = (ImageView) findViewById(R.id.vp_fullscreen_lock);
-
-        mVideoPlayView.setOnClickListener(this);
-        mVideoThumbView.setOnClickListener(this);
-        mVideoTextureViewContainer.setOnClickListener(this);
-        mVideoTextureViewContainer.setOnTouchListener(this);
-        mVideoErrorView.setOnClickListener(this);
-        mVideoErrorView.setOnClickListener(this);
-        mVideoControllerView.setOnTouchListener(this);
-        mVideoSmallWindowBackView.setOnClickListener(this);
-        mVideoFullScreenBackView.setOnClickListener(this);
-        mVideoFullScreenLockView.setOnClickListener(this);
-    }
-
-    /**
-     * 初始化自定义视图的相关参数信息
-     * @param context
-     * @param attributeSet
-     */
-    private void initCustomViewAttributes(Context context, AttributeSet attributeSet) {
-
-        TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.VideoPlayerView, 0, 0);
-
-        mFullScreenGestureViewRes = attr.getResourceId(R.styleable.VideoPlayerView_vpFullScreenGestureViewLayoutRes, -1);
-        mVideoThumbViewRes = attr.getResourceId(R.styleable.VideoPlayerView_vpVideoThumbViewLayoutRes, -1);
-        mVideoControllerViewRes = attr.getResourceId(R.styleable.VideoPlayerView_vpVideoControllerViewLayoutRes, -1);
-
-        attr.recycle();
-    }
-
-    /**
-     * 初始化视频预览图视图
-     */
-    protected void initVideoThumbView() {
-
-        if(mVideoThumbView != null) {
-            return;
-        }
-        if(mVideoThumbViewRes == -1) {
-            mVideoThumbView = new ImageView(getContext());
-            mVideoThumbView.setBackgroundResource(android.R.color.black);
-            mVideoThumbView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        } else {
-            mVideoThumbView = (ImageView) inflate(getContext(), mVideoThumbViewRes, null);
-        }
-        RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        this.addView(mVideoThumbView, ViewIndex.VIDEO_THUMB_VIEW_INDEX, params);
-    }
-
-    /**
-     * 初始化底部控制台View
-     */
-    protected void initVideoControllerView() {
-
-        if(mVideoControllerView != null) {
-            return;
-        }
-        if(mVideoThumbViewRes == -1) {
-            mVideoControllerView = new VideoControllerView(getContext());
-        } else {
-            mVideoControllerView = (VideoControllerView) inflate(getContext(), mVideoControllerViewRes, null);
-        }
-        mVideoControllerView.setFullScreenToggleListener(this);
-        RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.addView(mVideoControllerView, ViewIndex.VIDEO_CONTROLLER_VIEW_INDEX, params);
-    }
-
-    /**
-     * 初始化全屏播放手势操作视图
-     */
-    protected void initFullScreenGestureView() {
-
-        if(mFullScreenGestureView != null) {
-            return;
-        }
-        if(mFullScreenGestureViewRes != -1) {
-            mFullScreenGestureView = (FullScreenGestureView) inflate(getContext(), mFullScreenGestureViewRes, null);
-        } else {
-            mFullScreenGestureView = new FullScreenGestureView(getContext());
-        }
-        RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        this.addView(mFullScreenGestureView, ViewIndex.FULLSCREEN_GESTURE_VIEW_INDEX, params);
     }
 
     private void resetViewState() {
 
-        mCurrentState = PlayState.STATE_NORMAL;
-        mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL;
-        onPlayStateChanged(mCurrentState);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_NORMAL);
+        onPlayStateChanged(PlayState.STATE_NORMAL);
+    }
+
+    protected void setCurrentScreenState(int currentScreenState) {
+
+        mCurrentScreenState = currentScreenState;
+        mVideoControllerView.setCurrentScreenState(currentScreenState);
+        PlayerManager.getInstance().setScreenState(currentScreenState);
+    }
+
+    @Override
+    public int getCurrentScreenState() {
+
+        return mCurrentScreenState;
+    }
+
+    @Override
+    public int getCurrentState() {
+
+        return mCurrentState;
     }
 
     /**
      * 绑定数据
      * @param videoUrl
      */
+    @Override
     public void bind(String videoUrl, CharSequence title, boolean showNormalStateTitleView) {
 
-        mShowNormalStateTitleView = showNormalStateTitleView;
-        mVideoTitle = title;
-        mVideoUrl = videoUrl;
-        if(!TextUtils.isEmpty(mVideoTitle)) {
-            mVideoTitleView.setText(mVideoTitle);
-        }
+        super.bind(videoUrl, title, showNormalStateTitleView);
         resetViewState();
-    }
-
-    /**
-     * 绑定数据
-     * @param videoUrl
-     */
-    public void bind(String videoUrl, CharSequence title) {
-
-        bind(videoUrl, title, mShowNormalStateTitleView);
-        resetViewState();
-    }
-
-    public void bind(String videoUrl) {
-
-        bind(videoUrl, null);
     }
 
     @Override
@@ -389,8 +147,13 @@ public class VideoPlayerView extends RelativeLayout implements
         int state = PlayerManager.getInstance().getState();
 
         if(v == mVideoThumbView) {
+            //点击视频缩略图
+            startPlayVideo();
+        } else if(v == mVideoErrorView) {
+            //点击播放错误视图
             startPlayVideo();
         } else if (R.id.vp_video_play == id) {
+            //点击播放按钮
             if(TextUtils.isEmpty(mVideoUrl)) {
                 Toast.makeText(getContext(), R.string.vp_no_url, Toast.LENGTH_SHORT).show();
                 return;
@@ -411,40 +174,12 @@ public class VideoPlayerView extends RelativeLayout implements
                     PlayerManager.getInstance().play();
                     break;
             }
-        } else if(R.id.vp_video_play_error_view == id) {
-            startPlayVideo();
         } else if(R.id.vp_video_small_window_back == id) {
             //关闭小窗口播放，并停止播放当前视频
-            exitSmallWindowPlay(true);
-        } else if(R.id.vp_video_fullScreen_back == id) {
-            onFullScreenHeaderBackClick(v);
+            onExitSmallWindowPlay(true);
         } else if(R.id.vp_fullscreen_lock == id) {
+            //全屏播放时锁定当前播放状态
             onToggleFullScreenLockState(!mFullScreenLocked);
-        }
-    }
-
-    /**
-     * 全屏播放时，头部的返回按钮点击事件
-     * @param view
-     */
-    protected void onFullScreenHeaderBackClick(View view) {
-
-        exitFullScreen();
-    }
-
-    /**
-     * 全屏播放时，锁屏按钮点击事件
-     */
-    protected void onToggleFullScreenLockState(boolean locked) {
-
-        mFullScreenLocked = locked;
-        if(mFullScreenLocked) {
-            mVideoFullScreenLockView.setImageResource(R.drawable.vp_ic_fullscreen_lock);
-            hideAllPlayStateViewExcludeLockView();
-            startDismissControllerViewTimer();
-        } else {
-            mVideoFullScreenLockView.setImageResource(R.drawable.vp_ic_fullscreen_unlocked);
-            showAllPlayStateView();
         }
     }
 
@@ -484,35 +219,6 @@ public class VideoPlayerView extends RelativeLayout implements
     protected boolean canPlay() {
 
         return Utils.isConnected(getContext()) || PlayerManager.getInstance().isCached(mVideoUrl);
-    }
-
-    public TextureView createTextureView() {
-
-        //重新为播放器关联TextureView
-        TextureView textureView = newTextureView();
-        FrameLayout.LayoutParams params =
-                new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        Gravity.CENTER);
-        textureView.setLayoutParams(params);
-        return textureView;
-    }
-
-    /**
-     * 创建一个TextureView
-     * 此处单独写成一个方法可以方便后续自定义扩展TextureView
-     *
-     * @return
-     */
-    protected TextureView newTextureView() {
-
-        return new TextureView(getContext());
-    }
-
-    public ImageView getThumbImageView() {
-
-        return mVideoThumbView;
     }
 
     /************************ 使用观察者模式监听播放状态的变化 ********************************/
@@ -561,20 +267,6 @@ public class VideoPlayerView extends RelativeLayout implements
     }
 
     /**
-     * 点击返回键时的处理
-     * 此时如果全屏播放则会退出全屏
-     *
-     * 小窗口默认不做处理，如果需要处理小窗口，可以重载此方法实现
-     * @param message
-     */
-    protected void onBackPressed(BackPressedMessage message) {
-
-        if(ScreenState.isFullScreen(message.getScreenState())) {
-            exitFullScreen();
-        }
-    }
-
-    /**
      * 播放状态发生改变时调用
      * @param state
      */
@@ -607,8 +299,8 @@ public class VideoPlayerView extends RelativeLayout implements
             case PlayState.STATE_AUTO_COMPLETE:
                 Utils.log("state change to: STATE_AUTO_COMPLETE");
                 mVideoControllerView.stopVideoProgressUpdate();
-                exitFullScreen();
-                exitSmallWindowPlay(true);
+                onExitFullScreen();
+                onExitSmallWindowPlay(true);
                 break;
             case PlayState.STATE_ERROR:
                 Utils.log("state change to: STATE_ERROR");
@@ -631,353 +323,28 @@ public class VideoPlayerView extends RelativeLayout implements
 
         switch (state) {
             case PlayState.STATE_NORMAL:
-                onChangeUINormalState();
+                onChangeUINormalState(getCurrentScreenState());
                 break;
             case PlayState.STATE_LOADING:
-                onChangeUILoadingState();
+                onChangeUILoadingState(getCurrentScreenState());
                 break;
             case PlayState.STATE_PLAYING:
-                onChangeUIPlayingState();
+                onChangeUIPlayingState(getCurrentScreenState());
                 break;
             case PlayState.STATE_PAUSE:
-                onChangeUIPauseState();
+                onChangeUIPauseState(getCurrentScreenState());
                 break;
             case PlayState.STATE_PLAYING_BUFFERING_START:
-                onChangeUISeekBufferingState();
+                onChangeUISeekBufferingState(getCurrentScreenState());
                 break;
             case PlayState.STATE_AUTO_COMPLETE:
-                onChangeUICompleteState();
+                onChangeUICompleteState(getCurrentScreenState());
                 break;
             case PlayState.STATE_ERROR:
-                onChangeUIErrorState();
+                onChangeUIErrorState(getCurrentScreenState());
                 break;
             default:
                 throw new IllegalStateException("Illegal Play State:" + state);
-        }
-    }
-
-    /**
-     * 更改头部视图状态
-     * @param showHeaderView    是否显示头部视图
-     */
-    protected void onChangeVideoHeaderViewState(boolean showHeaderView) {
-
-        if(showHeaderView == false) {
-            Utils.hideViewIfNeed(mVideoHeaderViewContainer);
-            return;
-        }
-        if(ScreenState.isFullScreen(mCurrentScreenState)) {
-            Utils.showViewIfNeed(mVideoHeaderViewContainer);
-            Utils.showViewIfNeed(mVideoFullScreenBackView);
-            showFullScreenLockView();
-        } else if(ScreenState.isNormal(mCurrentScreenState)) {
-            if(mShowNormalStateTitleView) {
-                Utils.showViewIfNeed(mVideoHeaderViewContainer);
-                Utils.hideViewIfNeed(mVideoFullScreenBackView);
-            } else {
-                Utils.hideViewIfNeed(mVideoHeaderViewContainer);
-            }
-        } else {
-            //小窗口播放隐藏视频头部视图
-            Utils.hideViewIfNeed(mVideoHeaderViewContainer);
-        }
-    }
-
-    /**
-     * UI状态更新为Normal状态，即初始状态
-     */
-    protected void onChangeUINormalState() {
-
-        //显示视频预览图
-        Utils.showViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.hideViewIfNeed(mVideoLoadingBar);
-        //显示播放按钮
-        mVideoPlayView.setImageResource(R.drawable.vp_play_selector);
-        Utils.showViewIfNeed(mVideoPlayView);
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //隐藏小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else if(ScreenState.isFullScreen(mCurrentScreenState)){
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUINormalState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(true);
-    }
-
-    /**
-     * UI状态更新为Loading状态，即视频加载状态
-     */
-    protected void onChangeUILoadingState() {
-
-        //显示视频预览图
-        Utils.hideViewIfNeed(mVideoThumbView);
-        //显示加载loading
-        Utils.showViewIfNeed(mVideoLoadingBar);
-        //隐藏播放按钮
-        Utils.hideViewIfNeed(mVideoPlayView);
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //隐藏小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else {
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUILoadingState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(false);
-    }
-
-    /**
-     * UI状态更新为Playing状态，即视频播放状态
-     */
-    protected void onChangeUIPlayingState() {
-
-
-        //隐藏视频预览图
-        Utils.hideViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.hideViewIfNeed(mVideoLoadingBar);
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            cancelDismissControllerViewTimer();
-            //隐藏暂停按钮
-            Utils.hideViewIfNeed(mVideoPlayView);
-            //显示小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else {
-            startDismissControllerViewTimer();
-            //显示暂停按钮
-            mVideoPlayView.setImageResource(R.drawable.vp_pause_selector);
-            Utils.showViewIfNeed(mVideoPlayView);
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUIPlayingState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(true);
-    }
-
-    /**
-     * UI状态更新为SeekBuffer状态，即视拖动进度条
-     */
-    protected void onChangeUISeekBufferingState() {
-
-        //隐藏视频预览图
-        Utils.hideViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.showViewIfNeed(mVideoLoadingBar);
-        //隐藏暂停按钮
-        Utils.hideViewIfNeed(mVideoPlayView);
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            cancelDismissControllerViewTimer();
-            //显示小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else {
-            cancelDismissControllerViewTimer();
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUISeekBufferingState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(false);
-    }
-
-    /**
-     * UI状态更新为Pause状态，即视频暂停播放状态
-     */
-    protected void onChangeUIPauseState() {
-
-        //隐藏视频预览图
-        Utils.hideViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.hideViewIfNeed(mVideoLoadingBar);
-        cancelDismissControllerViewTimer();
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //显示小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-            //隐藏播放按钮
-            Utils.hideViewIfNeed(mVideoPlayView);
-        } else {
-            //显示播放按钮
-            mVideoPlayView.setImageResource(R.drawable.vp_play_selector);
-            Utils.showViewIfNeed(mVideoPlayView);
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUIPauseState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(true);
-    }
-
-    /**
-     * UI状态更新为Complete状态，即视频播放结束状态
-     */
-    protected void onChangeUICompleteState() {
-
-        //显示视频预览图
-        Utils.showViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.hideViewIfNeed(mVideoLoadingBar);
-        //显示再次播放按钮
-        mVideoPlayView.setImageResource(R.drawable.vp_replay_selector);
-        Utils.showViewIfNeed(mVideoPlayView);
-        cancelDismissControllerViewTimer();
-        //隐藏播放错误文案
-        Utils.hideViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //显示小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else {
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUICompleteState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(true);
-    }
-
-    /**
-     * UI状态更新为Error状态，即视频播放错误状态
-     */
-    protected void onChangeUIErrorState() {
-
-        //隐藏视频预览图
-        Utils.hideViewIfNeed(mVideoThumbView);
-        //隐藏加载loading
-        Utils.hideViewIfNeed(mVideoLoadingBar);
-        //隐藏播放按钮
-        Utils.hideViewIfNeed(mVideoPlayView);
-        cancelDismissControllerViewTimer();
-        //显示播放错误文案
-        Utils.showViewIfNeed(mVideoErrorView);
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //显示小窗口关闭按钮
-            Utils.showViewIfNeed(mVideoSmallWindowBackView);
-        } else {
-            //隐藏小窗口关闭按钮
-            Utils.hideViewIfNeed(mVideoSmallWindowBackView);
-        }
-        mVideoControllerView.onChangeUIErrorState(mCurrentScreenState);
-        onChangeVideoHeaderViewState(false);
-    }
-
-    /**
-     * 当触摸视频时更新相关UI状态
-     */
-    public void onChangeUIWhenTouchVideoView() {
-
-        if(mCurrentState != PlayState.STATE_PLAYING) {
-            return;
-        }
-        boolean isAllShown = Utils.isViewShown(mVideoPlayView) && Utils.isViewShown(mVideoControllerView);
-        if(isAllShown) {
-            hideAllPlayStateView();
-        } else {
-            showAllPlayStateView();
-        }
-    }
-
-    /**
-     * 隐藏所有的播放控制视图
-     */
-    @Override
-    public void hideAllPlayStateView() {
-
-        Utils.hideViewIfNeed(mVideoFullScreenLockView);
-        hideAllPlayStateViewExcludeLockView();
-    }
-
-    /**
-     * 显示所有的播放控制视图(播放状态下)
-     */
-    @Override
-    public void showAllPlayStateView() {
-
-        showFullScreenLockView();
-        startDismissControllerViewTimer();
-        if(mFullScreenLocked == false) {
-            Utils.showViewIfNeed(mVideoPlayView);
-            mVideoControllerView.showAllPlayStateView();
-            onChangeVideoHeaderViewState(true);
-        }
-    }
-
-    /**
-     * 隐藏所有的播放控制视图（除了全屏播放时的锁屏按钮之外）
-     */
-    public void hideAllPlayStateViewExcludeLockView() {
-
-        Utils.hideViewIfNeed(mVideoPlayView);
-        mVideoControllerView.hideAllPlayStateView();
-        onChangeVideoHeaderViewState(false);
-        cancelDismissControllerViewTimer();
-    }
-
-    /**
-     * 显示全屏播放时的锁屏按钮
-     */
-    private void showFullScreenLockView() {
-
-        if(ScreenState.isFullScreen(mCurrentScreenState)) {
-            Utils.showViewIfNeed(mVideoFullScreenLockView);
-        } else {
-            Utils.hideViewIfNeed(mVideoFullScreenLockView);
-        }
-    }
-
-    /**
-     * 开始计时，mAutoDismissTime时间后自动隐藏底部控制条和播放按钮
-     */
-    public void startDismissControllerViewTimer() {
-
-        cancelDismissControllerViewTimer();
-        mDismissControllerViewTimer = new Timer();
-        mDismissControllerViewTimerTask = new DismissControllerViewTimerTask();
-        mDismissControllerViewTimer.schedule(mDismissControllerViewTimerTask, mAutoDismissTime);
-    }
-
-    /**
-     * 取消自动隐藏底部控制条任务
-     */
-    public void cancelDismissControllerViewTimer() {
-
-        if (mDismissControllerViewTimer != null) {
-            mDismissControllerViewTimer.cancel();
-        }
-        if (mDismissControllerViewTimerTask != null) {
-            mDismissControllerViewTimerTask.cancel();
-        }
-
-    }
-
-    /**
-     * 播放时，控制条3秒自动隐藏任务
-     */
-    public class DismissControllerViewTimerTask extends TimerTask {
-
-        @Override
-        public void run() {
-
-            int state = mCurrentState;
-            if (state != PlayState.STATE_NORMAL
-                    && state != PlayState.STATE_ERROR
-                    && state != PlayState.STATE_AUTO_COMPLETE) {
-                if (getContext() != null && getContext() instanceof Activity) {
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            hideAllPlayStateView();
-                        }
-                    });
-                }
-            }
         }
     }
 
@@ -988,7 +355,7 @@ public class VideoPlayerView extends RelativeLayout implements
         Utils.log("attached to window, view hash:" + mViewHash);
         PlayerManager.getInstance().addObserver(this);
         mToggleFullScreen = false;
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
+        if(ScreenState.isSmallWindow(getCurrentScreenState())) {
             /***
              * 进入小窗口播放后，视频在列表中原本播放视频的View因滑动进入可视范围从而又重新触发attach window
              * 因为原本播放视频的View与小窗口的mScreenState始终保持一致(小窗口状态{@link ScreenState.SCREEN_STATE_SMALL_WINDOW})，
@@ -1072,29 +439,18 @@ public class VideoPlayerView extends RelativeLayout implements
      * 4.设置横屏
      *
      * 步骤1和2保证了所有的播放操作均为同一对象，不存在播放状态的变化，因而可以有效的避免播放状态导致的异常崩溃
-     */
-    @Override
-    public void onToggleFullScreen() {
-
-        if(ScreenState.isFullScreen(mCurrentScreenState)) {
-            exitFullScreen();
-        } else if(ScreenState.isNormal(mCurrentScreenState)){
-            startFullScreen();
-        } else {
-            throw new IllegalStateException("the screen state is error, state=" + mCurrentScreenState);
-        }
-    }
-
-    /**
+     *
+     *
      * 开始全屏播放
      *
      * 使用全屏播放功能时一定要在对应的Activity声明中添加配置：
      * android:configChanges="orientation|screenSize|keyboardHidden"
      */
-    protected void startFullScreen() {
+    @Override
+    public void onStartFullScreen() {
 
         mToggleFullScreen = true;
-        PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_FULLSCREEN);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_FULLSCREEN);
         PlayerManager.getInstance().pause();
 
         ViewGroup windowContent = (ViewGroup) (Utils.getActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
@@ -1112,7 +468,6 @@ public class VideoPlayerView extends RelativeLayout implements
         Utils.getActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         Utils.getActivity(getContext()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        mVideoFullScreenView.setImageResource(R.drawable.vp_ic_minimize);
         PlayerManager.getInstance().play();
         onToggleFullScreenLockState(false);
     }
@@ -1120,13 +475,14 @@ public class VideoPlayerView extends RelativeLayout implements
     /**
      * 退出全屏播放
      */
-    protected void exitFullScreen() {
+    @Override
+    public void onExitFullScreen() {
 
-        if(!ScreenState.isFullScreen(mCurrentScreenState)) {
+        if(!ScreenState.isFullScreen(getCurrentScreenState())) {
             return;
         }
         mToggleFullScreen = true;
-        PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_NORMAL);
         PlayerManager.getInstance().pause();
 
         ViewGroup windowContent = (ViewGroup) (Utils.getActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
@@ -1138,7 +494,6 @@ public class VideoPlayerView extends RelativeLayout implements
         Utils.getActivity(getContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         Utils.getActivity(getContext()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        mVideoFullScreenView.setImageResource(R.drawable.vp_ic_fullscreen);
         mOldParent = null;
         mOldIndex = 0;
         if(mCurrentState != PlayState.STATE_AUTO_COMPLETE) {
@@ -1169,35 +524,36 @@ public class VideoPlayerView extends RelativeLayout implements
             return;
         }
         //Screen处于正常状态
-        if(ScreenState.isNormal(mCurrentScreenState)) {
-            startSmallWindowPlay();
+        if(ScreenState.isNormal(getCurrentScreenState())) {
+            onStartSmallWindowPlay();
         } else {
-            exitSmallWindowPlay(false);
+            onExitSmallWindowPlay(false);
         }
     }
 
     /**
      * 开始小窗口播放
      */
-    protected void startSmallWindowPlay() {
+    protected void onStartSmallWindowPlay() {
 
         mVideoControllerView.stopVideoProgressUpdate();
-        PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_SMALL_WINDOW);
-        VideoPlayerView videoPlayerView = new VideoPlayerView(getContext());
-        videoPlayerView.setId(R.id.vp_small_window_view_id);
-        videoPlayerView.mVideoControllerView = mVideoControllerView;
-        videoPlayerView.mFullScreenGestureView = mFullScreenGestureView;
-        videoPlayerView.mVideoUrl = mVideoUrl;
-        videoPlayerView.mViewHash = mViewHash;
-        videoPlayerView.mShowNormalStateTitleView = mShowNormalStateTitleView;
-        TextureView textureView = videoPlayerView.createTextureView();
-        videoPlayerView.mVideoTextureViewContainer.addView(textureView);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_SMALL_WINDOW);
+        PlayerManager.getInstance().setTextureView(null);
+        mVideoTextureViewContainer.removeAllViews();
+        VideoPlayerView smallWindowView = new VideoPlayerView(getContext());
+        smallWindowView.setId(R.id.vp_small_window_view_id);
+        smallWindowView.mVideoControllerView.cloneState(mVideoControllerView);
+        smallWindowView.mVideoHeaderView.setTitle(mVideoTitle);
+        smallWindowView.mVideoUrl = mVideoUrl;
+        smallWindowView.mViewHash = mViewHash;
+        TextureView textureView = smallWindowView.createTextureView();
+        smallWindowView.mVideoTextureViewContainer.addView(textureView);
         PlayerManager.getInstance().setTextureView(textureView);
 
         ViewGroup windowContent = (ViewGroup) (Utils.getActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(mSmallWindowWidth, mSmallWindowHeight);
         lp.gravity = Gravity.RIGHT|Gravity.BOTTOM;
-        windowContent.addView(videoPlayerView, lp);
+        windowContent.addView(smallWindowView, lp);
 
         /**
          * 先将小窗口播放视频的View添加到Window后再设置小窗口View的屏幕状态，
@@ -1205,10 +561,10 @@ public class VideoPlayerView extends RelativeLayout implements
          *
          * 下面状态的设置必须在addView之后执行，否则会进入死循环
          */
-        videoPlayerView.mCurrentScreenState = mCurrentScreenState;
-        videoPlayerView.mCurrentState = mCurrentState;
+        smallWindowView.mCurrentScreenState = getCurrentScreenState();
+        smallWindowView.mCurrentState = mCurrentState;
 
-        videoPlayerView.onPlayStateChanged(mCurrentState);
+        smallWindowView.onPlayStateChanged(mCurrentState);
     }
 
     /**
@@ -1216,31 +572,28 @@ public class VideoPlayerView extends RelativeLayout implements
      *
      * @param forceStop 退出小窗口时是否强制停止播放
      */
-    protected void exitSmallWindowPlay(boolean forceStop) {
+    protected void onExitSmallWindowPlay(boolean forceStop) {
 
-        if(ScreenState.isSmallWindow(mCurrentScreenState) == false) {
+        if(ScreenState.isSmallWindow(getCurrentScreenState()) == false) {
             return;
         }
 
         ViewGroup windowContent = (ViewGroup) (Utils.getActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
         VideoPlayerView smallWindowView = (VideoPlayerView) windowContent.findViewById(R.id.vp_small_window_view_id);
         smallWindowView.mVideoControllerView.stopVideoProgressUpdate();
-        PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_NORMAL);
         PlayerManager.getInstance().setTextureView(null);
         smallWindowView.mVideoTextureViewContainer.removeAllViews();
 
-        mFullScreenGestureView = smallWindowView.mFullScreenGestureView;
-        mVideoControllerView = smallWindowView.mVideoControllerView;
+        mVideoControllerView.cloneState(smallWindowView.mVideoControllerView);
         mVideoUrl = smallWindowView.mVideoUrl;
         mViewHash = smallWindowView.mViewHash;
         mCurrentState = smallWindowView.mCurrentState;
-        mShowNormalStateTitleView = smallWindowView.mShowNormalStateTitleView;
 
         if(forceStop) {
             PlayerManager.getInstance().stop();
             windowContent.removeView(smallWindowView);
         } else {
-
             windowContent.removeView(smallWindowView);
 
             TextureView textureView = createTextureView();
@@ -1297,52 +650,17 @@ public class VideoPlayerView extends RelativeLayout implements
         audioManager.abandonAudioFocus(this);
     }
 
-    /************************ 手势操作逻辑处理 ********************************/
-
     /**
-     * TextureView Touch后的逻辑处理
+     * 点击返回键时的处理
+     * 此时如果全屏播放则会退出全屏
      *
-     * 主要处理逻辑为：
-     * 1.触摸该View时显示或隐藏底部控制条
-     * 2.控制音量，亮度，快进和后退
+     * 小窗口默认不做处理，如果需要处理小窗口，可以重载此方法实现
+     * @param message
      */
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    protected void onBackPressed(BackPressedMessage message) {
 
-        if(ScreenState.isSmallWindow(mCurrentScreenState)) {
-            //小窗口播放时不响应手势操作
-            return false;
+        if(ScreenState.isFullScreen(message.getScreenState())) {
+            onExitFullScreen();
         }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                cancelDismissControllerViewTimer();
-                break;
-            case MotionEvent.ACTION_UP:
-                onChangeUIWhenTouchVideoView();
-                break;
-        }
-
-        if(mFullScreenLocked) {
-            return false;
-        }
-
-        if(mFullScreenGestureView != null) {
-            mFullScreenGestureView.onTouch(event, this,
-                    mVideoControllerView.getDuration(), mCurrentState);
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onFullScreenGestureStart() {
-
-        hideAllPlayStateView();
-    }
-
-    @Override
-    public void onFullScreenGestureFinish() {
-
-        showAllPlayStateView();
     }
 }

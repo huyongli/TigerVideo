@@ -1,13 +1,13 @@
-package cn.ittiger.player;
+package cn.ittiger.player.ui;
 
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -18,6 +18,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import cn.ittiger.player.PlayerManager;
+import cn.ittiger.player.R;
 import cn.ittiger.player.listener.FullScreenToggleListener;
 import cn.ittiger.player.listener.UIStateChangeListener;
 import cn.ittiger.player.listener.VideoControllerViewListener;
@@ -38,7 +40,7 @@ public class VideoControllerView extends RelativeLayout implements
         SeekBar.OnSeekBarChangeListener {
     private static final int PROGRESS_UPDATE_INTERNAL = 300;
     private static final int PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
-    protected View mVideoControllerIntenerlView;
+    protected View mVideoControllerInternalView;
     /**
      * 底部 视频当前播放时间
      */
@@ -54,13 +56,16 @@ public class VideoControllerView extends RelativeLayout implements
     /**
      * 底部 全屏播放按钮
      */
-    protected ImageView mVideoFullScreenView;
+    protected ImageView mVideoFullScreenButton;
     /**
      * 控制条不显示后，显示播放进度的进度条(不可点击)
      */
     protected ProgressBar mBottomProgressBar;
 
-
+    /**
+     * 当前屏幕播放状态
+     */
+    protected int mCurrentScreenState = ScreenState.SCREEN_STATE_NORMAL;
     /**
      * 视频时长，miliseconds
      */
@@ -106,19 +111,25 @@ public class VideoControllerView extends RelativeLayout implements
         initWidgetView();
     }
 
+    public void cloneState(VideoControllerView controllerView) {
+
+        this.mCurrentScreenState = controllerView.mCurrentScreenState;
+        this.mDuration = controllerView.mDuration;
+    }
+
     /**
      * 初始化底部控制条各个控件
      */
     protected void initWidgetView() {
 
-        mVideoControllerIntenerlView = findViewById(R.id.vp_video_bottom_controller_view);
+        mVideoControllerInternalView = findViewById(R.id.vp_video_bottom_controller_view);
         mVideoPlayTimeView = (TextView) findViewById(R.id.vp_video_play_time);
         mVideoTotalTimeView = (TextView) findViewById(R.id.vp_video_total_time);
         mVideoPlaySeekBar = (SeekBar) findViewById(R.id.vp_video_seek_progress);
-        mVideoFullScreenView = (ImageView) findViewById(R.id.vp_video_fullscreen);
+        mVideoFullScreenButton = (ImageView) findViewById(R.id.vp_video_fullscreen);
         mBottomProgressBar = (ProgressBar) findViewById(R.id.vp_video_bottom_progress);
 
-        mVideoFullScreenView.setOnClickListener(this);
+        mVideoFullScreenButton.setOnClickListener(this);
         mVideoPlaySeekBar.setOnSeekBarChangeListener(this);
     }
 
@@ -134,8 +145,17 @@ public class VideoControllerView extends RelativeLayout implements
     @Override
     public void onClick(View v) {
 
-        if(mFullScreenToggleListener != null) {
-            mFullScreenToggleListener.onToggleFullScreen();
+        if(mFullScreenToggleListener == null) {
+            return;
+        }
+        if(ScreenState.isFullScreen(mCurrentScreenState)) {
+            mFullScreenToggleListener.onExitFullScreen();
+            mVideoFullScreenButton.setImageResource(R.drawable.vp_ic_fullscreen);
+        } else if(ScreenState.isNormal(mCurrentScreenState)){
+            mFullScreenToggleListener.onStartFullScreen();
+            mVideoFullScreenButton.setImageResource(R.drawable.vp_ic_minimize);
+        } else {
+            throw new IllegalStateException("the screen state is error, state=" + mCurrentScreenState);
         }
     }
 
@@ -165,7 +185,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.hideViewIfNeed(this);
         //隐藏播放控制条
-        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        Utils.hideViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
     }
@@ -175,7 +195,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.hideViewIfNeed(this);
         //隐藏播放控制条
-        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        Utils.hideViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
     }
@@ -186,12 +206,12 @@ public class VideoControllerView extends RelativeLayout implements
         Utils.showViewIfNeed(this);
         if(ScreenState.isSmallWindow(screenState)) {
             //隐藏播放控制条
-            Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+            Utils.hideViewIfNeed(mVideoControllerInternalView);
             //显示底部播放进度
             Utils.showViewIfNeed(mBottomProgressBar);
         } else {
             //显示播放控制条
-            Utils.showViewIfNeed(mVideoControllerIntenerlView);
+            Utils.showViewIfNeed(mVideoControllerInternalView);
             //隐藏底部播放进度
             Utils.hideViewIfNeed(mBottomProgressBar);
         }
@@ -202,7 +222,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.showViewIfNeed(this);
         //显示播放控制条
-        Utils.showViewIfNeed(mVideoControllerIntenerlView);
+        Utils.showViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
     }
@@ -213,12 +233,12 @@ public class VideoControllerView extends RelativeLayout implements
         Utils.showViewIfNeed(this);
         if(ScreenState.isSmallWindow(screenState)) {
             //隐藏播放控制条
-            Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+            Utils.hideViewIfNeed(mVideoControllerInternalView);
             //显示底部播放进度
             Utils.showViewIfNeed(mBottomProgressBar);
         } else {
             //显示播放控制条
-            Utils.showViewIfNeed(mVideoControllerIntenerlView);
+            Utils.showViewIfNeed(mVideoControllerInternalView);
             //隐藏底部播放进度
             Utils.hideViewIfNeed(mBottomProgressBar);
         }
@@ -229,10 +249,11 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.hideViewIfNeed(this);
         //隐藏播放控制条
-        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        Utils.hideViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
         updateProgress(mDuration);
+        mVideoFullScreenButton.setImageResource(R.drawable.vp_ic_fullscreen);
     }
 
     @Override
@@ -240,7 +261,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.hideViewIfNeed(this);
         //隐藏播放控制条
-        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        Utils.hideViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
     }
@@ -250,7 +271,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.showViewIfNeed(this);
         //显示播放控制条
-        Utils.showViewIfNeed(mVideoControllerIntenerlView);
+        Utils.showViewIfNeed(mVideoControllerInternalView);
         //隐藏底部播放进度
         Utils.hideViewIfNeed(mBottomProgressBar);
     }
@@ -260,7 +281,7 @@ public class VideoControllerView extends RelativeLayout implements
 
         Utils.showViewIfNeed(this);
         //隐藏播放控制条
-        Utils.hideViewIfNeed(mVideoControllerIntenerlView);
+        Utils.hideViewIfNeed(mVideoControllerInternalView);
         //显示底部播放进度
         Utils.showViewIfNeed(mBottomProgressBar);
     }
@@ -329,5 +350,19 @@ public class VideoControllerView extends RelativeLayout implements
     public int getDuration() {
 
         return mDuration;
+    }
+
+    public void setCurrentScreenState(int currentScreenState) {
+
+        mCurrentScreenState = currentScreenState;
+    }
+
+    public void toggleFullScreenButtonVisibility(boolean isShow) {
+
+        if(isShow) {
+            Utils.showViewIfNeed(mVideoFullScreenButton);
+        } else {
+            Utils.hideViewIfNeed(mVideoFullScreenButton);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package cn.ittiger.player.demo;
 
-import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 

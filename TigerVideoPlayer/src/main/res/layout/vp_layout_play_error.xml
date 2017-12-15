@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/vp_error_margin"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/vp_error_text_size"
+        android:textColor="@color/vp_error_text_color"
+        android:text="@string/vp_load_failed"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/vp_error_padding_horizontal"
+        android:paddingEnd="@dimen/vp_error_padding_horizontal"
+        android:gravity="center"
+        android:paddingTop="@dimen/vp_error_padding_vertical"
+        android:paddingBottom="@dimen/vp_error_padding_vertical"
+        android:textSize="@dimen/vp_error_text_size"
+        android:textColor="@color/vp_error_text_color"
+        android:text="@string/vp_click_retry"
+        android:background="@drawable/vp_error_text_bg"/>
+</LinearLayout>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -42,6 +41,13 @@ public class FullScreenVideoPlayerView extends VideoPlayerView {
     }
 
     @Override
+    public void bind(String videoUrl, CharSequence title, boolean showNormalStateTitleView) {
+
+        super.bind(videoUrl, title, showNormalStateTitleView);
+        onChangeUILoadingState(getCurrentScreenState());
+    }
+
+    @Override
     public void startPlayVideo() {
 
         if(canPlay() == false) {
@@ -61,10 +67,15 @@ public class FullScreenVideoPlayerView extends VideoPlayerView {
 
         forceFullScreen();
         initFullScreenGestureView();
-        Utils.hideViewIfNeed(mVideoFullScreenView);
-        Utils.hideViewIfNeed(mVideoFullScreenBackView);
-        PlayerManager.getInstance().setScreenState(mCurrentScreenState = ScreenState.SCREEN_STATE_FULLSCREEN);
-        play();
+        mVideoControllerView.toggleFullScreenButtonVisibility(false);
+        mVideoHeaderView.toggleFullScreenBackViewVisibility(false);
+        setCurrentScreenState(ScreenState.SCREEN_STATE_FULLSCREEN);
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                play();
+            }
+        }, 100);
     }
 
     private void forceFullScreen() {
@@ -76,16 +87,24 @@ public class FullScreenVideoPlayerView extends VideoPlayerView {
     }
 
     @Override
-    protected void onFullScreenHeaderBackClick(View view) {
+    public void onExitFullScreen() {
 
         Utils.getActivity(getContext()).finish();
     }
 
     @Override
-    protected void onChangeLogicCompleteState() {
+    public void onChangeUICompleteState(int screenState) {
 
-        stopVideoProgressUpdate();
+        super.onChangeUICompleteState(screenState);
+        mVideoControllerView.stopVideoProgressUpdate();
         Toast.makeText(getContext(), "Play complete", Toast.LENGTH_SHORT).show();
         Utils.getActivity(getContext()).finish();
+    }
+
+    @Override
+    protected void onChangeVideoHeaderViewState(boolean isShow) {
+
+        super.onChangeVideoHeaderViewState(isShow);
+        mVideoHeaderView.toggleFullScreenBackViewVisibility(false);
     }
 }

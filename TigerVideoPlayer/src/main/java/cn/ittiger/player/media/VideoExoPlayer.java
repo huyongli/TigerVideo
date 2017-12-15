@@ -84,8 +84,6 @@ public class VideoExoPlayer extends AbsSimplePlayer implements SimpleExoPlayer.V
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 
-        if(mSurfaceTexture != null) {
-        }
         mExoPlayer.setVideoTextureView(mTextureView);
         super.onSurfaceTextureAvailable(surface, width, height);
     }
