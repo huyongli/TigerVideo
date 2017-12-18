@@ -59,12 +59,12 @@ Glide.with(mContext).load(video.getVideoThumbUrl()).into(holder.mPlayerView.getT
         app:vpVideoThumbViewLayoutRes="@layout/fresco_image_view"
         .../>
 ```
-如上代码所示，如果要自定义全屏手势操作相关View，只需要在布局中添加自定义属性`app:vpFullScreenGestureViewLayoutRes`即可
-1.自定义布局my_fullscreen_gesture_view的根视图必须继承自FullScreenGestureView
-2.自定义底部播放控制条View时，必须继承自VideoControllerView
-3.自定义视频缩略图，必须继承自ImageView
-4.自定义加载失败View，不需要继承任何View
-5.自定义头部View时，必须继承自VideoHeaderView
+如上代码所示，如果要自定义全屏手势操作相关View，只需要在布局中添加自定义属性`app:vpFullScreenGestureViewLayoutRes`即可  
+1. 自定义布局my_fullscreen_gesture_view的根视图必须继承自FullScreenGestureView
+2. 自定义底部播放控制条View时，必须继承自VideoControllerView
+3. 自定义视频缩略图，必须继承自ImageView
+4. 自定义加载失败View，不需要继承任何View
+5. 自定义头部View时，必须继承自VideoHeaderView
 
 
 ### 自定义播放配置
