@@ -279,6 +279,7 @@ public class VideoPlayerView extends StandardVideoView implements
                 Utils.log("state change to: STATE_NORMAL");
                 mVideoControllerView.onVideoDurationChanged(0);
                 mVideoControllerView.stopVideoProgressUpdate();
+                onExitSmallWindowPlay(true);//stop时，关闭小窗口
                 abandonAudioFocus();
                 ((Activity)getContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 break;
