@@ -3,7 +3,7 @@
 该`Library`实现了`Android`中的视频播放模块，视频播放控制与界面显示充分解耦，可自定义自己喜欢的内核播放器来实现播放功能(`MediaPlayer`,`ExoPlayer`等)。
 
 个人公众号，欢迎扫码关注交流：   
-![](http://ittiger.cn/img/qrcode/weixinGzhQrcode.jpg)
+![](https://img-blog.csdnimg.cn/2019052410035231.jpg)
 
 # 功能
 目前该库主要实现视频播放中的如下功能：
@@ -115,7 +115,7 @@ Mosby(一个MVP框架)、RxJava、Retrofit2、ButterKnife、Glide、Systembartin
 # 关于作者
 博客：[http://ittiger.cn](http://ittiger.cn)     
 个人公众号，欢迎扫码关注交流：   
-![](http://ittiger.cn/img/qrcode/weixinGzhQrcode.jpg)
+![](https://img-blog.csdnimg.cn/2019052410035231.jpg)
 
 # LICENSE
 
